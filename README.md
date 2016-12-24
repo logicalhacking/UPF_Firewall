@@ -13,8 +13,8 @@ for installing the AFP locall. For short:
 * Extract the downloaded archive to an directory of your choice
 * Let's assume the extracted archive lives in `/home/isabelle/afp`, now execute:
 ```
-         mkdir -p ~/.isabelle/Isabelle2016-1/etc
-         echo "/home/isabelle/afp" >> ~/.isabelle/Isabelle2016-1/etc/components
+mkdir -p ~/.isabelle/Isabelle2016-1/etc
+echo "/home/isabelle/afp" >> ~/.isabelle/Isabelle2016-1/etc/components
 ```
 
 ## How to build
