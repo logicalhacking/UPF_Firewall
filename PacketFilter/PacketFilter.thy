@@ -37,9 +37,9 @@
 subsection {* Network Policies: Packet Filter *}
 theory 
   PacketFilter
-imports
-  NetworkModels
-  ProtocolPortCombinators
-  Ports
+  imports
+    NetworkModels
+    ProtocolPortCombinators
+    Ports
 begin 
 end

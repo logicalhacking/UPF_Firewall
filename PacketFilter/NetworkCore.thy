@@ -38,8 +38,8 @@
 subsection{* Packets and Networks *}
 theory 
   NetworkCore
-imports 
-  Main
+  imports 
+    Main
 begin
 
 text{* 
@@ -94,7 +94,7 @@ text{*
 *}
 
 definition src :: "('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<alpha>"
-where "src  = fst o snd "
+  where "src  = fst o snd "
 
 text{* 
   Port numbers (which are part of an address) are also modelled in a generic way. The integers and 
@@ -116,24 +116,24 @@ text{*
   To access the different parts of a packet directly, we define a couple of projectors: 
 *}
 definition id :: "('\<alpha>::adr,'\<beta>) packet \<Rightarrow> id" 
-where "id = fst"
+  where "id = fst"
 
 definition dest :: "('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<alpha> dest"
-where "dest = fst o snd o snd"
+  where "dest = fst o snd o snd"
 
 definition content :: "('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<beta> content"
-where "content = snd o snd o snd"
+  where "content = snd o snd o snd"
 
 datatype protocol = tcp | udp
 
 lemma either: "\<lbrakk>a \<noteq> tcp;a \<noteq> udp\<rbrakk> \<Longrightarrow> False"
-by (case_tac a,simp_all)
+  by (case_tac a,simp_all)
 
 lemma either2[simp]: "(a \<noteq> tcp) = (a = udp)"
-by (case_tac a,simp_all)                 
+  by (case_tac a,simp_all)                 
 
 lemma either3[simp]: "(a \<noteq> udp) = (a = tcp)"
-by (case_tac a,simp_all)                
+  by (case_tac a,simp_all)                
 
 text{* 
   The following two constants give the source and destination port number of a packet. Address 
@@ -164,7 +164,7 @@ lemma in_subnet:
 
 lemma src_in_subnet: 
   "src(q,(a,e),r,t) \<sqsubset> {{(x1,y). P x1 y}} = P a e"
- by (simp add: in_subnet_def in_subnet src_def)
+  by (simp add: in_subnet_def in_subnet src_def)
 
 lemma dest_in_subnet: 
   "dest (q,r,((a),e),t) \<sqsubset> {{(x1,y). P x1 y}} = P a e"

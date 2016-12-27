@@ -36,18 +36,18 @@
  *****************************************************************************)
 
 section{* Network Models *}
-theory 
+theory            
   NetworkModels
-imports
- DatatypeAddress
- DatatypePort
+  imports
+    DatatypeAddress
+    DatatypePort
 
- IntegerAddress
- IntegerPort
- IntegerPort_TCPUDP
+    IntegerAddress
+    IntegerPort
+    IntegerPort_TCPUDP
 
- IPv4
- IPv4_TCPUDP
+    IPv4
+    IPv4_TCPUDP
 begin
 
 text{* 

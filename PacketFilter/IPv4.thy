@@ -38,8 +38,8 @@
 subsection {* Formalizing IPv4 Addresses *}
 theory 
   IPv4
-imports 
-  NetworkCore
+  imports 
+    NetworkCore
 begin
 text{* 
   A theory describing IPv4 addresses with ports. The host address is a four-tuple of Integers, 
@@ -58,7 +58,7 @@ type_synonym
 overloading src_port_ipv4 \<equiv> "src_port :: ('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<gamma>::port" 
 begin 
 definition 
-   "src_port_ipv4 (x::(ipv4,'\<beta>) packet) \<equiv> (snd o fst o snd) x"
+  "src_port_ipv4 (x::(ipv4,'\<beta>) packet) \<equiv> (snd o fst o snd) x"
 end 
 
 overloading dest_port_ipv4 \<equiv> "dest_port :: ('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<gamma>::port"
@@ -74,7 +74,7 @@ definition
 end
 
 definition subnet_of_ip :: "ipv4_ip \<Rightarrow> ipv4 net"
-where "subnet_of_ip ip = {{(a,b). (a = ip)}}"
+  where "subnet_of_ip ip = {{(a,b). (a = ip)}}"
 
 lemma src_port: "src_port (a,(x::ipv4),d,e) = snd x"
   by (simp add: src_port_ipv4_def in_subnet)

@@ -36,8 +36,9 @@
  *****************************************************************************)
 
 subsection {* IPv4 with Ports and Protocols *}
-theory IPv4_TCPUDP
-imports IPv4
+theory 
+  IPv4_TCPUDP
+  imports IPv4
 begin
 
 type_synonym 
@@ -48,7 +49,7 @@ instance protocol :: adr ..
 overloading src_port_ipv4_TCPUDP \<equiv> "src_port :: ('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<gamma>::port" 
 begin 
 definition 
-   "src_port_ipv4_TCPUDP (x::(ipv4_TCPUDP,'\<beta>) packet) \<equiv> (fst o snd o fst o snd) x"
+  "src_port_ipv4_TCPUDP (x::(ipv4_TCPUDP,'\<beta>) packet) \<equiv> (fst o snd o fst o snd) x"
 end 
 
 overloading dest_port_ipv4_TCPUDP \<equiv> "dest_port :: ('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<gamma>::port"
@@ -70,7 +71,7 @@ definition
 end
 
 definition subnet_of_ip :: "ipv4_ip \<Rightarrow> ipv4_TCPUDP net"
-where "subnet_of_ip ip = {{(a,b). (a = ip)}}"
+  where "subnet_of_ip ip = {{(a,b). (a = ip)}}"
 
 lemma src_port: "src_port (a,(x::ipv4_TCPUDP),d,e) = fst (snd x)"
   by (simp add: src_port_ipv4_TCPUDP_def in_subnet)
@@ -79,5 +80,5 @@ lemma dest_port: "dest_port (a,d,(x::ipv4_TCPUDP),e) = fst (snd x)"
   by (simp add: dest_port_ipv4_TCPUDP_def in_subnet)
 
 lemmas Ipv4_TCPUDPLemmas = src_port dest_port src_port_ipv4_TCPUDP_def dest_port_ipv4_TCPUDP_def 
-                           dest_protocol_ipv4_TCPUDP_def subnet_of_ipv4_TCPUDP_def
+  dest_protocol_ipv4_TCPUDP_def subnet_of_ipv4_TCPUDP_def
 end

@@ -36,8 +36,10 @@
  *****************************************************************************)
 
 subsection {* Datatype Addresses with Ports *}
-theory DatatypePort
-imports NetworkCore
+theory 
+  DatatypePort
+  imports 
+    NetworkCore
 begin
 
 text{* 
@@ -67,7 +69,7 @@ definition
 overloading src_port_datatype \<equiv> "src_port :: ('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<gamma>::port" 
 begin 
 definition 
-   "src_port_datatype (x::(DatatypePort,'\<beta>) packet)  \<equiv> (snd o fst o snd) x"
+  "src_port_datatype (x::(DatatypePort,'\<beta>) packet)  \<equiv> (snd o fst o snd) x"
 end 
 
 overloading dest_port_datatype \<equiv> "dest_port :: ('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<gamma>::port"
@@ -87,7 +89,7 @@ lemma src_port : "src_port ((a,x,d,e)::(DatatypePort,'\<beta>) packet) = snd x"
 
 lemma dest_port : "dest_port ((a,d,x,e)::(DatatypePort,'\<beta>) packet) = snd x"
   by (simp add: dest_port_datatype_def in_subnet)
-
+    
 lemmas DatatypePortLemmas = src_port dest_port src_port_datatype_def dest_port_datatype_def 
 
 end

@@ -38,8 +38,8 @@
 subsection {* Integer Addresses with Ports and Protocols *}
 theory 
   IntegerPort_TCPUDP
-imports 
-  NetworkCore
+  imports 
+    NetworkCore
 begin
 
 text{* A theory describing addresses which are modelled as a pair of Integers - the first being 
@@ -59,7 +59,7 @@ instance protocol :: adr ..
 overloading src_port_int_TCPUDP \<equiv> "src_port :: ('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<gamma>::port" 
 begin 
 definition 
-   "src_port_int_TCPUDP (x::(adr\<^sub>i\<^sub>p\<^sub>p,'\<beta>) packet)  \<equiv> (fst o snd o fst  o snd) x"
+  "src_port_int_TCPUDP (x::(adr\<^sub>i\<^sub>p\<^sub>p,'\<beta>) packet)  \<equiv> (fst o snd o fst  o snd) x"
 end 
 
 overloading dest_port_int_TCPUDP \<equiv> "dest_port :: ('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<gamma>::port"
@@ -94,18 +94,16 @@ lemma dest_port: "dest_port (a,d,x::adr\<^sub>i\<^sub>p\<^sub>p,e) = fst (snd x)
 
 text {* Common test constraints: *}
 
-
 definition port_positive :: "(adr\<^sub>i\<^sub>p\<^sub>p,'b) packet \<Rightarrow> bool" where
- "port_positive x = (dest_port x > (0::port))"
+  "port_positive x = (dest_port x > (0::port))"
 
 definition fix_values :: "(adr\<^sub>i\<^sub>p\<^sub>p,DummyContent) packet \<Rightarrow> bool" where
- "fix_values x =  (src_port x = (1::port) \<and> src_protocol x = udp \<and> content x = data \<and> id x = 1)"
+  "fix_values x =  (src_port x = (1::port) \<and> src_protocol x = udp \<and> content x = data \<and> id x = 1)"
 
 
 lemmas adr\<^sub>i\<^sub>p\<^sub>pLemmas = src_port dest_port src_port_int_TCPUDP_def dest_port_int_TCPUDP_def 
-                     src_protocol_int_TCPUDP_def dest_protocol_int_TCPUDP_def 
-                     subnet_of_int_TCPUDP_def 
+  src_protocol_int_TCPUDP_def dest_protocol_int_TCPUDP_def subnet_of_int_TCPUDP_def 
 
 lemmas adr\<^sub>i\<^sub>p\<^sub>pTestConstraints = port_positive_def fix_values_def
-
+  
 end

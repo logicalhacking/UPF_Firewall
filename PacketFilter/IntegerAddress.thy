@@ -36,13 +36,15 @@
  *****************************************************************************)
 
 subsection {* Integer Addresses *}
-theory IntegerAddress
-imports NetworkCore
+theory 
+  IntegerAddress
+  imports 
+    NetworkCore
 begin
 
 text{* A theory where addresses are modelled as Integers.*}
 
 type_synonym 
-   adr\<^sub>i = "int" 
-
+  adr\<^sub>i = "int" 
+  
 end

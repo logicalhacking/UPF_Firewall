@@ -36,9 +36,10 @@
  *****************************************************************************)
 
 subsection {* Policy Combinators *}
-theory PolicyCombinators
-imports 
-PolicyCore
+theory 
+  PolicyCombinators
+  imports 
+    PolicyCore
 begin
 
 text{* In order to ease the specification of a concrete policy, we
@@ -69,8 +70,7 @@ definition
 
 definition 
   deny_all_from_to    :: "'\<alpha>::adr net \<Rightarrow> '\<alpha>::adr net \<Rightarrow> (('\<alpha>,'\<beta>) packet \<mapsto> unit)" where
-  "deny_all_from_to src_net dest_net =                                    
-             {pa. src pa \<sqsubset> src_net \<and> dest pa \<sqsubset> dest_net} \<triangleleft> D\<^sub>U"
+  "deny_all_from_to src_net dest_net = {pa. src pa \<sqsubset> src_net \<and> dest pa \<sqsubset> dest_net} \<triangleleft> D\<^sub>U"
 
 
 text{* All these combinators and the default rules are put into one
@@ -81,6 +81,5 @@ text{* All these combinators and the default rules are put into one
 lemmas PolicyCombinators = allow_all_from_def deny_all_from_def
   allow_all_to_def deny_all_to_def allow_all_from_to_def
   deny_all_from_to_def UPFDefs
-  
-                         
+                           
 end

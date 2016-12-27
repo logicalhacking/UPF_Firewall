@@ -38,8 +38,8 @@
 subsection{* Integer Addresses with Ports *}
 theory 
   IntegerPort
-imports 
-  NetworkCore
+  imports 
+    NetworkCore
 begin
 
 text{* 
@@ -59,7 +59,7 @@ type_synonym
 overloading src_port_int \<equiv> "src_port :: ('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<gamma>::port" 
 begin 
 definition 
-   "src_port_int (x::(adr\<^sub>i\<^sub>p,'\<beta>) packet)  \<equiv> (snd o fst  o snd) x"
+  "src_port_int (x::(adr\<^sub>i\<^sub>p,'\<beta>) packet)  \<equiv> (snd o fst  o snd) x"
 end 
 
 overloading dest_port_int \<equiv> "dest_port :: ('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<gamma>::port"

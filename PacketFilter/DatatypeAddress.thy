@@ -38,8 +38,8 @@
 subsection {* Datatype Addresses *}
 theory 
   DatatypeAddress
-imports 
-  NetworkCore 
+  imports 
+    NetworkCore 
 begin
 
 text{* 
@@ -58,5 +58,5 @@ definition
 definition
   internet::"DatatypeAddress net" where
   "internet = {{internet_adr}}"
-
+  
 end

@@ -37,8 +37,10 @@
 
 subsection {* Policy Combinators with Ports and Protocols *}
 
-theory ProtocolPortCombinators
-imports PortCombinators
+theory 
+  ProtocolPortCombinators
+  imports 
+    PortCombinators
 begin
 
 text{* 
@@ -74,19 +76,19 @@ definition
     {pa. dest_protocol pa = p} \<triangleleft> deny_all_to_port dest_net d_port"
 
 definition
-allow_all_from_port_to_prot:: "protocol =>'\<alpha>::adr net \<Rightarrow> '\<gamma>::port \<Rightarrow> '\<alpha>::adr net \<Rightarrow> (('\<alpha>,'\<beta>) packet \<mapsto> unit)"
-where
-  "allow_all_from_port_to_prot p src_net s_port dest_net =  
+  allow_all_from_port_to_prot:: "protocol =>'\<alpha>::adr net \<Rightarrow> '\<gamma>::port \<Rightarrow> '\<alpha>::adr net \<Rightarrow> (('\<alpha>,'\<beta>) packet \<mapsto> unit)"
+  where
+    "allow_all_from_port_to_prot p src_net s_port dest_net =  
    {pa. dest_protocol pa = p} \<triangleleft> allow_all_from_port_to src_net s_port dest_net"
 
 definition 
-deny_all_from_port_to_prot::"protocol \<Rightarrow> '\<alpha>::adr net \<Rightarrow>  '\<gamma>::port \<Rightarrow> '\<alpha>::adr net \<Rightarrow> (('\<alpha>,'\<beta>) packet \<mapsto> unit)"
+  deny_all_from_port_to_prot::"protocol \<Rightarrow> '\<alpha>::adr net \<Rightarrow>  '\<gamma>::port \<Rightarrow> '\<alpha>::adr net \<Rightarrow> (('\<alpha>,'\<beta>) packet \<mapsto> unit)"
   where
-  "deny_all_from_port_to_prot p src_net s_port dest_net = 
+    "deny_all_from_port_to_prot p src_net s_port dest_net = 
    {pa. dest_protocol pa = p} \<triangleleft>  deny_all_from_port_to  src_net s_port dest_net"
 
 definition
-allow_all_from_port_to_port_prot::"protocol \<Rightarrow> '\<alpha>::adr net \<Rightarrow> '\<gamma>::port \<Rightarrow> '\<alpha>::adr net \<Rightarrow> '\<gamma>::port \<Rightarrow>
+  allow_all_from_port_to_port_prot::"protocol \<Rightarrow> '\<alpha>::adr net \<Rightarrow> '\<gamma>::port \<Rightarrow> '\<alpha>::adr net \<Rightarrow> '\<gamma>::port \<Rightarrow>
                               (('\<alpha>,'\<beta>) packet \<mapsto> unit)" where
   "allow_all_from_port_to_port_prot p src_net s_port dest_net d_port = 
        {pa. dest_protocol pa = p} \<triangleleft>      allow_all_from_port_to_port src_net s_port dest_net d_port "
@@ -111,26 +113,26 @@ definition
 
 definition 
   allow_from_port_to_prot :: "protocol =>'\<gamma>::port \<Rightarrow> '\<alpha>::adr net \<Rightarrow> '\<alpha>::adr net \<Rightarrow> (('\<alpha>,'\<beta>) packet \<mapsto> unit)"
-where 
-  "allow_from_port_to_prot p port src_net dest_net =   
+  where 
+    "allow_from_port_to_prot p port src_net dest_net =   
     {pa. dest_protocol pa = p} \<triangleleft> allow_from_port_to port src_net dest_net"
 
 definition 
   deny_from_port_to_prot :: "protocol =>'\<gamma>::port \<Rightarrow> '\<alpha>::adr net \<Rightarrow> '\<alpha>::adr net \<Rightarrow> (('\<alpha>,'\<beta>) packet \<mapsto> unit)"
-where 
-  "deny_from_port_to_prot p port src_net dest_net =   
+  where 
+    "deny_from_port_to_prot p port src_net dest_net =   
     {pa. dest_protocol pa = p} \<triangleleft> deny_from_port_to port src_net dest_net"
 
 definition 
   allow_from_to_port_prot :: "protocol =>'\<gamma>::port  \<Rightarrow> '\<alpha>::adr net \<Rightarrow> '\<alpha>::adr net \<Rightarrow> (('\<alpha>,'\<beta>) packet \<mapsto> unit)"
-where 
-  "allow_from_to_port_prot p port src_net dest_net =   
+  where 
+    "allow_from_to_port_prot p port src_net dest_net =   
   {pa. dest_protocol pa = p} \<triangleleft> allow_from_to_port port src_net dest_net"
 
 definition 
   deny_from_to_port_prot :: "protocol =>'\<gamma>::port  \<Rightarrow> '\<alpha>::adr net \<Rightarrow> '\<alpha>::adr net \<Rightarrow> (('\<alpha>,'\<beta>) packet \<mapsto> unit)"
-where 
-  "deny_from_to_port_prot p port src_net dest_net =   
+  where 
+    "deny_from_to_port_prot p port src_net dest_net =   
     {pa. dest_protocol pa = p} \<triangleleft> deny_from_to_port port src_net dest_net"
 
 definition 
@@ -138,7 +140,6 @@ definition
                           (('\<alpha>,'\<beta>) packet \<mapsto> unit)" where
   "allow_from_ports_to_prot p ports src_net dest_net =   
    {pa. dest_protocol pa = p} \<triangleleft> allow_from_ports_to ports src_net dest_net"
-
 
 definition 
   allow_from_to_ports_prot :: "protocol =>'\<gamma>::port set \<Rightarrow> '\<alpha>::adr net \<Rightarrow> '\<alpha>::adr net \<Rightarrow>
@@ -152,16 +153,13 @@ definition
   "deny_from_ports_to_prot p ports src_net dest_net =   
     {pa. dest_protocol pa = p} \<triangleleft> deny_from_ports_to ports src_net dest_net"
 
-
 definition 
   deny_from_to_ports_prot :: "protocol =>'\<gamma>::port set \<Rightarrow> '\<alpha>::adr net \<Rightarrow> '\<alpha>::adr net \<Rightarrow>
                           (('\<alpha>,'\<beta>) packet \<mapsto> unit)" where
   "deny_from_to_ports_prot p ports src_net dest_net =   
     {pa. dest_protocol pa = p} \<triangleleft> deny_from_to_ports ports src_net dest_net"
 
-
-text{* As before, we put all the rules into one lemma 
-   to ease writing later.  *} 
+text{* As before, we put all the rules into one lemma to ease writing later.  *} 
 
 lemmas ProtocolCombinatorsCore = 
   allow_all_from_port_prot_def deny_all_from_port_prot_def allow_all_to_port_prot_def
@@ -173,8 +171,6 @@ lemmas ProtocolCombinatorsCore =
   allow_from_port_to_prot_def allow_from_to_port_prot_def deny_from_to_port_prot_def
   deny_from_port_to_prot_def 
 
-lemmas ProtocolCombinators = PortCombinators.PortCombinators
-ProtocolCombinatorsCore
-
+lemmas ProtocolCombinators = PortCombinators.PortCombinators ProtocolCombinatorsCore
 
 end

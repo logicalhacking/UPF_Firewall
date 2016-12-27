@@ -37,7 +37,8 @@
 
 subsection {* Ports *}
 theory Ports
-imports Main
+  imports 
+    Main
 begin
 
 text{*
@@ -48,28 +49,26 @@ text{*
 definition http::int where "http = 80"
 
 lemma http1: "x \<noteq> 80 \<Longrightarrow> x \<noteq> http"
-by (simp add: http_def)
+  by (simp add: http_def)
 
 lemma http2: "x \<noteq> 80 \<Longrightarrow> http \<noteq> x"
-by (simp add: http_def)
-
+  by (simp add: http_def)
 
 definition smtp::int where "smtp = 25"
 
 lemma smtp1: "x \<noteq> 25 \<Longrightarrow> x \<noteq> smtp"
-by (simp add: smtp_def)
+  by (simp add: smtp_def)
 
 lemma smtp2: "x \<noteq> 25 \<Longrightarrow> smtp \<noteq> x"
-by (simp add: smtp_def)
-
+  by (simp add: smtp_def)
 
 definition ftp::int where "ftp = 21"
 
 lemma ftp1: "x \<noteq> 21 \<Longrightarrow> x \<noteq> ftp"
-by (simp add: ftp_def)
+  by (simp add: ftp_def)
 
 lemma ftp2: "x \<noteq> 21 \<Longrightarrow> ftp \<noteq> x"
-by (simp add: ftp_def)
+  by (simp add: ftp_def)
 
 text{* And so on for all desired port numbers. *}
 
