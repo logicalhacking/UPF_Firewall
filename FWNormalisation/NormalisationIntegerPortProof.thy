@@ -609,8 +609,6 @@ lemma rule_charn2:
    case Nil show ?case using Nil by simp
  next 
    case (snoc y ys)
-   then have * : " y = AllowPortFromTo c d po \<Longrightarrow> ys \<noteq> []"  sorry
-   have ** : "applied_rule_rev C x ys = Some (AllowPortFromTo c d po)"  sledgehammer sorry
    show ?case using snoc
      apply (case_tac "y = (AllowPortFromTo c d po)", simp_all )
      apply (simp add: applied_rule_rev_def)
