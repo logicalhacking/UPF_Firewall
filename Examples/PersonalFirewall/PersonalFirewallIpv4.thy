@@ -38,66 +38,53 @@
 subsection {* Personal Firewall IPv4 *}
 theory 
   PersonalFirewallIpv4
-imports 
-  "../../UPF-Firewall"
+  imports 
+    "../../UPF-Firewall"
 begin
-
-
+  
 text{*
-
-The most basic firewall scenario; there is a personal PC on one side and the Internet on the other. 
-There are two policies: the first one allows all traffic from the PC to the Internet and denies
-all coming into the PC. The second policy only allows specific ports from the PC. This scenario
-comes in three variants: the first one specifies the allowed protocols directly, the second together 
-with their respective port numbers, the third one only with the port numbers.
-
+  The most basic firewall scenario; there is a personal PC on one side and the Internet on the 
+  other. There are two policies: the first one allows all traffic from the PC to the Internet and 
+  denies all coming into the PC. The second policy only allows specific ports from the PC. This 
+  scenario comes in three variants: the first one specifies the allowed protocols directly, the 
+  second together with their respective port numbers, the third one only with the port numbers.
 *}
-
-
+  
 text{*
-Definitions of the subnets 
+  Definitions of the subnets 
 *}
-
+  
 definition 
- PC :: "(ipv4 net)" where
-"PC = {{((a,b,c,d),e). a = 1 \<and> b = 3 \<and> c = 5 \<and> d = 2}}"
-
+  PC :: "(ipv4 net)" where
+  "PC = {{((a,b,c,d),e). a = 1 \<and> b = 3 \<and> c = 5 \<and> d = 2}}"
+  
 definition
- Internet :: "ipv4 net" where
-"Internet = {{((a,b,c,d),e). \<not> (a = 1 \<and> b = 3 \<and> c = 5 \<and> d = 2)}}"
-
-
-text{*
-Definition of the testing constraint
-*}
-
+  Internet :: "ipv4 net" where
+  "Internet = {{((a,b,c,d),e). \<not> (a = 1 \<and> b = 3 \<and> c = 5 \<and> d = 2)}}"
+  
 definition
- not_in_same_net :: "(ipv4,DummyContent) packet \<Rightarrow> bool" where
-"not_in_same_net x = ((src x \<sqsubset> PC \<longrightarrow> dest x \<sqsubset> Internet) \<and> (src x \<sqsubset> Internet \<longrightarrow> dest x \<sqsubset> PC))" 
-
+  not_in_same_net :: "(ipv4,DummyContent) packet \<Rightarrow> bool" where
+  "not_in_same_net x = ((src x \<sqsubset> PC \<longrightarrow> dest x \<sqsubset> Internet) \<and> (src x \<sqsubset> Internet \<longrightarrow> dest x \<sqsubset> PC))" 
+  
 text {*
-Definitions of the policies 
+  Definitions of the policies 
 *}
-
 definition
- strictPolicy :: "(ipv4,DummyContent) FWPolicy" where
-"strictPolicy = deny_all ++ allow_all_from_to PC Internet"
-
+  strictPolicy :: "(ipv4,DummyContent) FWPolicy" where
+  "strictPolicy = deny_all ++ allow_all_from_to PC Internet"
+  
 definition
- PortPolicy :: "(ipv4,DummyContent) FWPolicy" where
-"PortPolicy = deny_all ++ allow_from_ports_to {80::port,24,21} PC Internet"
-
+  PortPolicy :: "(ipv4,DummyContent) FWPolicy" where
+  "PortPolicy = deny_all ++ allow_from_ports_to {80::port,24,21} PC Internet"
+  
 definition
- PortPolicyBig :: "(ipv4,DummyContent) FWPolicy" where
-"PortPolicyBig = deny_all ++ allow_from_port_to (80::port) PC Internet++ allow_from_port_to (24::port) PC Internet++ allow_from_port_to (21::port) PC Internet"
-
-
+  PortPolicyBig :: "(ipv4,DummyContent) FWPolicy" where
+  "PortPolicyBig = deny_all ++ allow_from_port_to (80::port) PC Internet++ allow_from_port_to (24::port) PC Internet++ allow_from_port_to (21::port) PC Internet"
+  
 lemmas policyLemmas = strictPolicy_def PortPolicy_def PC_def
-                      Internet_def PortPolicyBig_def src_def dest_def
-                      IPv4.src_port
-                      IPv4.dest_port PolicyCombinators
-                      PortCombinators in_subnet_def PortPolicyBig_def
-
-
-
+  Internet_def PortPolicyBig_def src_def dest_def
+  IPv4.src_port
+  IPv4.dest_port PolicyCombinators
+  PortCombinators in_subnet_def PortPolicyBig_def
+  
 end

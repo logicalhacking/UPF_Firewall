@@ -38,71 +38,60 @@
 subsection {* Personal Firewall: Datatype *}
 theory 
   PersonalFirewallDatatype
-imports 
-  FWTesting
+  imports 
+    "../../UPF-Firewall"
 begin
 
-text{* The most basic firewall scenario; there is a personal PC on one
-side and the Internet on the other.  There are two policies: the first
-one allows all traffic from the PC to the Internet and denies all
-coming into the PC. The second policy only allows specific ports from
-the PC. This scenario comes in three variants: the first one specifies
-the allowed protocols directly, the second together with their
-respective port numbers, the third one only with the port numbers.  *}
+text{* 
+  The most basic firewall scenario; there is a personal PC on one side and the Internet on the 
+  other. There are two policies: the first one allows all traffic from the PC to the Internet and 
+  denies all coming into the PC. The second policy only allows specific ports from the PC. This 
+  scenario comes in three variants: the first one specifies the allowed protocols directly, the 
+  second together with their respective port numbers, the third one only with the port numbers.  
+*}
 
 datatype Adr = pc | internet
-
+  
 type_synonym DatatypeTwoNets = "Adr \<times> int"
-
+  
 instance Adr::adr ..
-
-defs (overloaded)
- src_port_def: "src_port (x::(DatatypeTwoNets,'b) packet) \<equiv> snd (src x)"
- dest_port_def: "dest_port (x::(DatatypeTwoNets,'b) packet) \<equiv> snd (dest x)"
-
+    
 definition
- PC :: "DatatypeTwoNets net" where
-"PC = {{(a,b). a = pc}}"
-
+  PC :: "DatatypeTwoNets net" where
+  "PC = {{(a,b). a = pc}}"
+  
 definition
- Internet :: "DatatypeTwoNets net" where
-"Internet = {{(a,b). a = internet}}"
-
-
-text{*
-Definition of the testing constraint
-*}
-
+  Internet :: "DatatypeTwoNets net" where
+  "Internet = {{(a,b). a = internet}}"
+  
 definition
- not_in_same_net :: "(DatatypeTwoNets,DummyContent) packet \<Rightarrow> bool" where
-"not_in_same_net x = ((src x \<sqsubset> PC \<longrightarrow> dest x \<sqsubset> Internet) \<and> (src x \<sqsubset> Internet \<longrightarrow> dest x \<sqsubset> PC))" 
-
+  not_in_same_net :: "(DatatypeTwoNets,DummyContent) packet \<Rightarrow> bool" where
+  "not_in_same_net x = ((src x \<sqsubset> PC \<longrightarrow> dest x \<sqsubset> Internet) \<and> (src x \<sqsubset> Internet \<longrightarrow> dest x \<sqsubset> PC))" 
+  
 text {*
-Definitions of the policies 
+  Definitions of the policies 
 
-In fact, the short definitions wouldn't have to be written down - they
-are the automatically simplified versions of their big counterparts.
-
+  In fact, the short definitions wouldn't have to be written down - they
+  are the automatically simplified versions of their big counterparts.
 *}
 
 definition
- strictPolicy :: "(DatatypeTwoNets,DummyContent) FWPolicy" where
-"strictPolicy = deny_all ++ allow_all_from_to PC Internet"
-
+  strictPolicy :: "(DatatypeTwoNets,DummyContent) FWPolicy" where
+  "strictPolicy = deny_all ++ allow_all_from_to PC Internet"
+  
 definition
- PortPolicy :: "(DatatypeTwoNets,'b) FWPolicy" where
-"PortPolicy = deny_all ++ allow_from_ports_to {80::port,24,21} PC Internet"
-
+  PortPolicy :: "(DatatypeTwoNets,'b) FWPolicy" where
+  "PortPolicy = deny_all ++ allow_from_ports_to {80::port,24,21} PC Internet"
+  
 definition
- PortPolicyBig :: "(DatatypeTwoNets,'b) FWPolicy" where
-"PortPolicyBig =  
+  PortPolicyBig :: "(DatatypeTwoNets,'b) FWPolicy" where
+  "PortPolicyBig =  
                  allow_from_port_to (80::port) PC Internet \<Oplus> 
                  allow_from_port_to (24::port) PC Internet \<Oplus> 
                  allow_from_port_to (21::port) PC Internet \<Oplus> 
                  deny_all"
-
-
-lemmas policyLemmas = strictPolicy_def PortPolicy_def PC_def Internet_def PortPolicyBig_def src_def dest_def src_port_def dest_port_def  
+  
+lemmas policyLemmas = strictPolicy_def PortPolicy_def PC_def Internet_def PortPolicyBig_def src_def 
                       PolicyCombinators PortCombinators in_subnet_def
-
+  
 end

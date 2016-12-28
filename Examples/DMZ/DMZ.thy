@@ -38,38 +38,9 @@
 section {* A Simple DMZ Setup *}
 theory 
   DMZ
-imports 
-  DMZDatatype
-  DMZInteger
+  imports 
+    DMZDatatype
+    DMZInteger
 begin
-
-text{* This scenario is slightly more complicated than the SimpleDMZ
-one, as we now also model specific servers within one
-network. Therefore, we cannot use anymore the modelling using
-datatype synonym, but only use the one where an address is modelled as an
-integer (with ports).
-
-The scenario is the following:
-
-\begin{labeling}{Networks:}
-\item[Networks:]
-  \begin{itemize}
-  \item Intranet (Company intern network)
-  \item DMZ (demilitarised zone, servers, etc), containing
-     at least two distinct servers ``mail'' and ``web''
-  \item Internet (``all others'') 
-  \end{itemize}
-\item[Policy:]
-  \begin{itemize}
-  \item allow http(s) from Intranet to Internet
-  \item deny all trafic from Internet to Intranet
-  \item allo imaps and smtp from intranet to mailserver
-  \item allow smtp from Internet to mailserver
-  \item allow http(s) from Internet to webserver 
-  \item deny everything else
-  \end{itemize}
   
-\end{labeling}
-*}
-
 end

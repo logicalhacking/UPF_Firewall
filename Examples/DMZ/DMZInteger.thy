@@ -38,10 +38,10 @@
 subsection {* DMZ: Integer *}
 theory 
   DMZInteger
-imports 
-  "../../UPF-Firewall"
+  imports 
+    "../../UPF-Firewall"
 begin
-
+  
 text{* This scenario is slightly more complicated than the SimpleDMZ
 one, as we now also model specific servers within one
 network. Therefore, we cannot use anymore the modelling using
@@ -71,10 +71,9 @@ The scenario is the following:
 \end{labeling}
 *}
 
-
 definition
-   intranet::"adr\<^sub>i\<^sub>p net" where
-   "intranet = {{(a,b) . (a > 1 \<and> a < 4) }}"
+  intranet::"adr\<^sub>i\<^sub>p net" where
+  "intranet = {{(a,b) . (a > 1 \<and> a < 4) }}"
 definition
   dmz :: "adr\<^sub>i\<^sub>p net" where
   "dmz = {{(a,b). (a > 6) \<and> (a < 11)}}" 
@@ -88,46 +87,44 @@ definition
   internet :: "adr\<^sub>i\<^sub>p net" where
   "internet = {{(a,b).  \<not> ( (a > 1 \<and> a < 4) \<or> (a > 6) \<and> (a < 11))   }}"
 
-
 definition 
   Intranet_mail_port :: "(adr\<^sub>i\<^sub>p,'b) FWPolicy" where
   "Intranet_mail_port = (allow_from_to_ports {21::port,14} intranet mail)" 
-
+  
 definition
   Intranet_Internet_port :: "(adr\<^sub>i\<^sub>p,'b) FWPolicy" where
   "Intranet_Internet_port = allow_from_to_ports {80::port,90} intranet internet"
-     
+  
 definition
   Internet_web_port :: "(adr\<^sub>i\<^sub>p,'b) FWPolicy" where
   "Internet_web_port = (allow_from_to_ports {80::port,90} internet web)"
-          
+  
 definition
   Internet_mail_port :: "(adr\<^sub>i\<^sub>p,'b) FWPolicy" where
   "Internet_mail_port =  (allow_all_from_port_to internet (21::port) dmz )"
 
-
-
 definition 
   policyPort :: "(adr\<^sub>i\<^sub>p, DummyContent) FWPolicy" where
- "policyPort = deny_all ++ 
+  "policyPort = deny_all ++ 
                   Intranet_Internet_port ++ 
                   Intranet_mail_port ++  
                   Internet_mail_port ++ 
                   Internet_web_port"
 
-
-text {* We only want to create test cases which are sent between the three main networks ---
- e.g. not between the mailserver and the dmz. Therefore, the constraint looks as follows. *}
-
+text {* 
+  We only want to create test cases which are sent between the three main networks:
+   e.g. not between the mailserver and the dmz. Therefore, the constraint looks as follows. 
+*}
+  
 definition
- not_in_same_net :: "(adr\<^sub>i\<^sub>p,DummyContent) packet \<Rightarrow> bool" where
- "not_in_same_net x  =  ((src x \<sqsubset> internet \<longrightarrow> \<not> dest x \<sqsubset> internet) \<and> 
+  not_in_same_net :: "(adr\<^sub>i\<^sub>p,DummyContent) packet \<Rightarrow> bool" where
+  "not_in_same_net x  =  ((src x \<sqsubset> internet \<longrightarrow> \<not> dest x \<sqsubset> internet) \<and> 
                         (src x \<sqsubset> intranet \<longrightarrow> \<not> dest x \<sqsubset> intranet) \<and> 
                         (src x \<sqsubset> dmz \<longrightarrow> \<not> dest x \<sqsubset> dmz))"
-
+  
 lemmas PolicyLemmas =  policyPort_def  dmz_def internet_def intranet_def mail_def web_def 
-                       Intranet_Internet_port_def Intranet_mail_port_def Internet_web_port_def 
-                       Internet_mail_port_def src_def dest_def IntegerPort.src_port
-                       in_subnet_def IntegerPort.dest_port
-
+  Intranet_Internet_port_def Intranet_mail_port_def Internet_web_port_def 
+  Internet_mail_port_def src_def dest_def IntegerPort.src_port
+  in_subnet_def IntegerPort.dest_port
+  
 end

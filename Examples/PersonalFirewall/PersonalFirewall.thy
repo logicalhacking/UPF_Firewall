@@ -38,8 +38,9 @@
 section {* Personal Firewall *}
 theory 
   PersonalFirewall
-imports 
-  PersonalFirewallInt
-  PersonalFirewallIpv4
+  imports 
+    PersonalFirewallInt
+    PersonalFirewallIpv4
+    PersonalFirewallDatatype
 begin 
 end

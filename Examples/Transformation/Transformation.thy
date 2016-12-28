@@ -36,9 +36,11 @@
  *****************************************************************************)
 
 section {* Demonstrating Policy Transformations *}
-theory Transformation
-imports 
-  Transformation01
-  Transformation02
+theory 
+  Transformation
+  imports 
+    Transformation01
+    Transformation02
 begin
 end
+  

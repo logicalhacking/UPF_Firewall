@@ -36,17 +36,19 @@
  *****************************************************************************)
 
 section {* Voice over IP *}
-theory VoIP
-imports 
-  "../../UPF-Firewall"
+theory 
+  VoIP
+  imports 
+    "../../UPF-Firewall"
 begin
+  
 
-
-text{* In this theory we generate the test data for correct runs of
-the FTP protocol. As usual, we start with definining the networks and
-the policy. We use a rather simple policy which allows only FTP
-connections starting from the Intranet and going to the Internet, and
-deny everything else. *}
+text{* 
+  In this theory we generate the test data for correct runs of the FTP protocol. As usual, we 
+  start with definining the networks and the policy. We use a rather simple policy which allows 
+  only FTP connections starting from the Intranet and going to the Internet, and deny everything 
+  else. 
+*}
 
 definition 
   intranet :: "adr\<^sub>i\<^sub>p net" where
@@ -60,14 +62,13 @@ definition
   gatekeeper :: "adr\<^sub>i\<^sub>p net" where
   "gatekeeper = {{(a,c). a =4}}"
 
-
 definition 
   voip_policy :: "(adr\<^sub>i\<^sub>p,address voip_msg) FWPolicy" where
   "voip_policy = A\<^sub>U"
 
-
-text{* The next two constants check if an address is in the Intranet
-or in the Internet respectively.*}
+text{* 
+  The next two constants check if an address is in the Intranet or in the Internet respectively.
+*}
 
 definition 
   is_in_intranet :: "address  \<Rightarrow> bool" where
@@ -81,9 +82,9 @@ definition
   is_in_internet :: "address \<Rightarrow> bool" where
   "is_in_internet a =  (a > 4)"
 
-
 text{*
-The next definition is our starting state: an empty trace and the just defined policy.*}
+  The next definition is our starting state: an empty trace and the just defined policy.
+*}
 
 definition 
   "\<sigma>_0_voip" ::  "(adr\<^sub>i\<^sub>p, address voip_msg) history \<times>
@@ -91,30 +92,25 @@ definition
 where                                     
   "\<sigma>_0_voip = ([],voip_policy)"
 
-text{*Next we state the conditions we have on our trace: a normal
-behaviour FTP run from the intranet to some server in the internet on
-port 21.*}
+text{*
+  Next we state the conditions we have on our trace: a normal behaviour FTP run from the intranet 
+  to some server in the internet on port 21.
+*}
 
 definition "accept_voip" ::  "(adr\<^sub>i\<^sub>p, address voip_msg) history \<Rightarrow> bool" where
-          "accept_voip t = 
-  (\<exists> c s g i p1 p2. t \<in> NB_voip c s g i p1 p2 \<and> is_in_intranet c \<and> is_in_internet s
+          "accept_voip t =   (\<exists> c s g i p1 p2. t \<in> NB_voip c s g i p1 p2 \<and> is_in_intranet c 
+                                              \<and> is_in_internet s
                                               \<and> is_gatekeeper g)"
-
-
 
 fun packet_with_id where
  "packet_with_id [] i = []"
 |"packet_with_id (x#xs) i = 
   (if id x = i then (x#(packet_with_id xs i)) else (packet_with_id xs i))"
 
-
-text{*The depth of the test case generation corresponds to the maximal
-length of generated traces. 4 is the minimum to get a full FTP
-protocol run.  *}
-
-
-
-
+text{*
+  The depth of the test case generation corresponds to the maximal length of generated traces,  
+  4 is the minimum to get a full FTP protocol run.
+*}
 
 fun ids1 where
  "ids1 i (x#xs) = (id x = i \<and> ids1 i xs)"
@@ -128,9 +124,5 @@ lemmas ST_simps = Let_def valid_SE_def unit_SE_def bind_SE_def
  is_connect_def is_setup_def ports_open_def subnet_of_adr_def
  VOIP.NB_voip_def \<sigma>_0_voip_def PLemmas VOIP_TRPolicy_def
  policy2MON_def applyPolicy_def 
-
-
-
-
 
 end

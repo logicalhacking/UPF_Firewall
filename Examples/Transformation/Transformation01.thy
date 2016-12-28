@@ -38,94 +38,82 @@
 subsection {* Transformation Example 1 *}
 theory 
   Transformation01
-imports 
-  "../../UPF-Firewall"
+  imports 
+    "../../UPF-Firewall"
 begin
 
 definition
- FWLink :: "adr\<^sub>i\<^sub>p net" where
-"FWLink = {{(a,b). a = 1}}"
+  FWLink :: "adr\<^sub>i\<^sub>p net" where
+  "FWLink = {{(a,b). a = 1}}"
+  
+definition
+  any :: "adr\<^sub>i\<^sub>p net" where
+  "any = {{(a,b). a > 5}}"
+  
+definition
+  i4:: "adr\<^sub>i\<^sub>p net" where
+  "i4 = {{(a,b). a = 2 }}" 
+  
+definition
+  i27:: "adr\<^sub>i\<^sub>p net" where
+  "i27 = {{(a,b). a = 3 }}" 
+  
+definition
+  eth_intern:: "adr\<^sub>i\<^sub>p net" where
+  "eth_intern = {{(a,b). a = 4 }}"
+  
+definition
+  eth_private:: "adr\<^sub>i\<^sub>p net" where
+  "eth_private = {{(a,b). a = 5 }}"
 
 definition
- any :: "adr\<^sub>i\<^sub>p net" where
-"any = {{(a,b). a > 5}}"
-
-definition
- i4:: "adr\<^sub>i\<^sub>p net" where
-"i4 = {{(a,b). a = 2 }}" 
-
-definition
- i27:: "adr\<^sub>i\<^sub>p net" where
-"i27 = {{(a,b). a = 3 }}" 
- 
-definition
- eth_intern:: "adr\<^sub>i\<^sub>p net" where
-"eth_intern = {{(a,b). a = 4 }}"
- 
-definition
- eth_private:: "adr\<^sub>i\<^sub>p net" where
-"eth_private = {{(a,b). a = 5 }}"
-
-
-definition
-(* Mandatory: Global *)
-
- MG2 :: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
-"MG2 = AllowPortFromTo i27 any 1 \<oplus> 
+  (* Mandatory: Global *)
+  MG2 :: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
+  "MG2 = AllowPortFromTo i27 any 1 \<oplus> 
        AllowPortFromTo i27 any 2 \<oplus>
        AllowPortFromTo i27 any 3"
-
+  
 definition
- MG3 :: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
-"MG3 = AllowPortFromTo any FWLink 1"
-
+  MG3 :: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
+  "MG3 = AllowPortFromTo any FWLink 1"
+  
 definition
- MG4 :: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
-"MG4 = AllowPortFromTo FWLink FWLink 4"
- 
+  MG4 :: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
+  "MG4 = AllowPortFromTo FWLink FWLink 4"
+  
 definition
- MG7 :: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
-"MG7 = AllowPortFromTo FWLink i4 6 \<oplus>
+  MG7 :: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
+  "MG7 = AllowPortFromTo FWLink i4 6 \<oplus>
        AllowPortFromTo FWLink i4 7"
-
+  
 definition
- MG8 :: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
-"MG8 = AllowPortFromTo FWLink i4 6 \<oplus>
+  MG8 :: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
+  "MG8 = AllowPortFromTo FWLink i4 6 \<oplus>
        AllowPortFromTo FWLink i4 7"
-
-(* Default Global *)
+  
+  (* Default Global *)
+definition
+  DG3:: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
+  "DG3 = AllowPortFromTo any any 7"
 
 definition
- DG3:: "(adr\<^sub>i\<^sub>p net,port) Combinators" where
-"DG3 = AllowPortFromTo any any 7"
+  "Policy = DenyAll \<oplus> MG8 \<oplus>  MG7 \<oplus> MG4 \<oplus> MG3 \<oplus> MG2 \<oplus> DG3"   
 
- 
+lemmas PolicyLemmas =  Policy_def
+  FWLink_def
+  any_def
+  i27_def
+  i4_def
+  eth_intern_def
+  eth_private_def
+  MG2_def MG3_def MG4_def MG7_def MG8_def  
+  DG3_def
 
-definition
-"Policy = DenyAll \<oplus> MG8 \<oplus>  MG7 \<oplus> MG4 \<oplus> MG3 \<oplus> MG2 \<oplus> DG3"   
- 
- 
-
- lemmas PolicyLemmas =  Policy_def
- FWLink_def
- any_def
- 
- i27_def
- i4_def
- 
- eth_intern_def
- eth_private_def
- 
- MG2_def MG3_def MG4_def MG7_def MG8_def  
- DG3_def
- 
-
-lemmas PolicyL =  MG2_def MG3_def MG4_def MG7_def MG8_def  
- DG3_def Policy_def
+lemmas PolicyL =  MG2_def MG3_def MG4_def MG7_def MG8_def DG3_def Policy_def
 
 definition 
- not_in_same_net :: "(adr\<^sub>i\<^sub>p,DummyContent) packet \<Rightarrow> bool" where
-"not_in_same_net x =  (((src x \<sqsubset> i27) \<longrightarrow> ( \<not> (dest x \<sqsubset> i27))) \<and>
+  not_in_same_net :: "(adr\<^sub>i\<^sub>p,DummyContent) packet \<Rightarrow> bool" where
+  "not_in_same_net x =  (((src x \<sqsubset> i27) \<longrightarrow> ( \<not> (dest x \<sqsubset> i27))) \<and>
                       ((src x \<sqsubset>  i4) \<longrightarrow> ( \<not> (dest x \<sqsubset> i4))) \<and>
                       ((src x \<sqsubset>  eth_intern) \<longrightarrow> ( \<not> (dest x \<sqsubset> eth_intern))) \<and>
                       ((src x \<sqsubset>  eth_private) \<longrightarrow> ( \<not> (dest x \<sqsubset> eth_private))))"
@@ -140,45 +128,33 @@ lemmas fixDefs = fixElements_def NetworkCore.id_def NetworkCore.content_def
 
 
 lemma sets_distinct1: "(n::int) \<noteq> m \<Longrightarrow> {(a,b). a = n} \<noteq> {(a,b). a = m}"
-apply auto
-done
+  by auto
 
 lemma sets_distinct2: "(m::int) \<noteq> n \<Longrightarrow> {(a,b). a = n} \<noteq> {(a,b). a = m}"
-apply auto
-done
-
-
+  by auto
 
 lemma sets_distinct3: "{((a::int),(b::int)). a = n} \<noteq> {(a,b). a > n}"
-apply auto
-done
-
+  by auto
 
 lemma sets_distinct4: "{((a::int),(b::int)). a > n} \<noteq> {(a,b). a = n}"
-apply auto
-done
-
+  by auto
 
 lemma aux: "\<lbrakk>a \<in> c; a \<notin> d; c = d\<rbrakk> \<Longrightarrow> False"
-apply auto
-done
-
-
+  by auto 
+    
 lemma sets_distinct5: "(s::int) < g \<Longrightarrow> {(a::int, b::int). a = s} \<noteq> {(a::int, b::int).  g < a}"
-apply (auto simp: sets_distinct3)
-apply (subgoal_tac "(s,4) \<in> {(a::int,b::int). a = (s)}")
-apply (subgoal_tac "(s,4) \<notin> {(a::int,b::int). g < a}")
-apply (erule aux)
-apply assumption+
-apply simp
-by blast
-
+  apply (auto simp: sets_distinct3)
+  apply (subgoal_tac "(s,4) \<in> {(a::int,b::int). a = (s)}")
+   apply (subgoal_tac "(s,4) \<notin> {(a::int,b::int). g < a}")
+    apply (erule aux)
+     apply assumption+
+   apply simp
+  by blast
 
 lemma sets_distinct6: "(s::int) < g \<Longrightarrow> {(a::int, b::int).  g < a} \<noteq> {(a::int, b::int).  a = s}"
-apply (rule not_sym)
-apply (rule sets_distinct5)
-by simp
-
+  apply (rule not_sym)
+  apply (rule sets_distinct5)
+  by simp
 
 lemma distinctNets: "FWLink \<noteq>  any \<and> FWLink \<noteq>  i4 \<and> FWLink \<noteq>  i27 \<and> FWLink \<noteq>  eth_intern \<and> FWLink \<noteq>   eth_private \<and> 
 any \<noteq>  FWLink \<and> any \<noteq>  i4 \<and> any \<noteq>  i27 \<and> any \<noteq>  eth_intern \<and> any \<noteq>  eth_private \<and> i4 \<noteq>  FWLink \<and> 
@@ -186,83 +162,34 @@ i4 \<noteq>  any \<and> i4 \<noteq>  i27 \<and> i4 \<noteq>  eth_intern \<and> i
 i27 \<noteq>  i4 \<and> i27 \<noteq>  eth_intern \<and> i27 \<noteq>  eth_private \<and> eth_intern \<noteq>  FWLink \<and> eth_intern \<noteq>  any \<and> 
 eth_intern \<noteq>  i4 \<and> eth_intern \<noteq>  i27 \<and> eth_intern \<noteq>  eth_private \<and> eth_private \<noteq>  FWLink \<and> 
 eth_private \<noteq>  any \<and> eth_private \<noteq>  i4 \<and> eth_private \<noteq>  i27 \<and> eth_private \<noteq>  eth_intern"
-apply (simp add: PolicyLemmas sets_distinct1 sets_distinct2 sets_distinct3 sets_distinct4 sets_distinct5 sets_distinct6)
-done
-
-
+  by (simp add: PolicyLemmas sets_distinct1 sets_distinct2 sets_distinct3 sets_distinct4 
+                sets_distinct5 sets_distinct6)
 
 lemma aux5: "\<lbrakk>x \<noteq> a; y\<noteq>b; (x \<noteq> y \<and> x \<noteq> b) \<or>  (a \<noteq> b \<and> a \<noteq> y)\<rbrakk> \<Longrightarrow> {x,a} \<noteq> {y,b}"
-  apply auto
-done
-
+  by auto
 
 lemma aux2: "{a,b} = {b,a}"
-  apply auto
-done
-
-(*
-lemma noMT: "\<forall> x \<in> set (policy2list Policy). dom (C x) \<noteq> {}"
-apply (simp add: PolicyLemmas)
-apply (simp add: PLemmas PolicyLemmas)
-by arith
-*)
-
+  by auto
 
 lemma ANDex: "allNetsDistinct (policy2list Policy)"
-apply (simp add: PolicyL allNetsDistinct_def distinctNets)
-apply (auto simp: PLemmas PolicyLemmas netsDistinct_def sets_distinct5 sets_distinct6)
-done
-
-(*
-lemma count_the_rules: "(int (length(policy2list (list2FWpolicy(normalize Policy)))) = post) \<and> 
-(int(length (policy2list Policy)) = pre) \<and>
- (int (length((normalize Policy))) = Partitions)"
-apply (insert distinctNets noMT)
-apply (simp add: normalize_def PolicyL bothNets_def aux5 aux2 Nets_List_def, thin_tac "?X",thin_tac "?S")
-oops
-
-
-
-lemma normedPolicy: "normalize Policy = X"
-apply (insert distinctNets noMT)
-apply (simp add: normalize_def PolicyL bothNets_def aux5 aux2 Nets_List_def, thin_tac "?X",thin_tac "?S")
-oops
-*)
-
+  apply (simp add: PolicyL allNetsDistinct_def distinctNets)
+  by (auto simp: PLemmas PolicyLemmas netsDistinct_def sets_distinct5 sets_distinct6)
+    
 fun (sequential) numberOfRules where 
- "numberOfRules (a\<oplus>b) = numberOfRules a + numberOfRules b"
- |"numberOfRules a = (1::int)" 
-
-
-
+  "numberOfRules (a\<oplus>b) = numberOfRules a + numberOfRules b"
+|"numberOfRules a = (1::int)" 
 
 fun numberOfRulesList where 
  "numberOfRulesList  (x#xs) = ((numberOfRules x)#(numberOfRulesList xs)) "
  |"numberOfRulesList [] = []" 
 
-(*
-lemma "numberOfRulesList (normalize Policy) = X"
-apply (insert distinctNets noMT)
-apply (simp add: normalize_def PolicyL bothNets_def aux5 aux2 Nets_List_def, thin_tac "?X",thin_tac "?S")
-oops
-*)
-
 lemma all_in_list: "all_in_list (policy2list Policy) (Nets_List Policy)"
-apply (simp add: PolicyL)
-apply (unfold Nets_List_def)
-apply (unfold bothNets_def)
-apply (insert distinctNets)
-apply simp
-done
+  apply (simp add: PolicyL)
+  apply (unfold Nets_List_def)
+  apply (unfold bothNets_def)
+  apply (insert distinctNets)
+  by simp
 
 lemmas normalizeUnfold =   normalize_def Policy_def Nets_List_def bothNets_def aux aux2 bothNets_def
-
-(*
-lemma noMT2: "\<forall> x \<in> set (policy2list Policy). dom (C x) \<noteq> {}"
-apply (simp add: PLemmas  normalize_def bothNets_def
-                 PolicyLemmas aux5 aux2 Nets_List_def ) 
-by (metis zless_add1_eq)
-*)
-
 
 end
