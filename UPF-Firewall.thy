@@ -38,11 +38,13 @@
 chapter {* UPF Firewall *}
 theory 
   "UPF-Firewall"
-imports 
-  "PacketFilter/PacketFilter" 
-  "NAT/NAT"
-  "FWNormalisation/FWNormalisation"
-  "StatefulFW/StatefulFW" 
+  imports 
+    "PacketFilter/PacketFilter" 
+    "NAT/NAT"
+    "FWNormalisation/FWNormalisation"
+    "StatefulFW/StatefulFW" 
 begin
-text{* This is the main entry point for specifications of firewall policies. *}
+text{* 
+  This is the main entry point for specifications of firewall policies. 
+*}
 end
