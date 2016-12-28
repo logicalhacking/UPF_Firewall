@@ -37,7 +37,7 @@
 
 subsection {* A simple voice-over-ip model *}
 theory VOIP
-imports  Stateful
+  imports  StatefulCore
 begin
 
 text{*
@@ -58,13 +58,6 @@ text{*
           the data stream of the next higher connection. 
     \item Calls can be initiated from outside the firewall.
   \end{itemize}
-
-% \begin{figure} 
-%   \centering
-%   \includegraphics[scale=0.4]{voip} 
-%   \caption {The modelled VoIP-Protocol}
-%   \label{voip}
-%  \end{figure}
 
   Again we only consider a simplified VoIP scenario with the following
   seven messages which are grouped into four subprotocols (see Figure
@@ -272,8 +265,6 @@ text{*
   For a full protocol run, six states are needed. 
 *}
 datatype voip_states = S0 | S1 | S2 | S3 | S4 | S5
-
-
 
 text{*   
   The constant @{text "is_voip"} checks if a trace corresponds to a

@@ -38,8 +38,8 @@
 subsection {* FTP and VoIP Protocol *}
 theory  
   FTPVOIP
-imports 
-  FTP_WithPolicy VOIP
+  imports 
+    FTP_WithPolicy VOIP
 begin
 
 datatype  ftpvoip =  ARQ
@@ -166,7 +166,7 @@ definition FTPVOIP_subnet_of_adr :: "int \<Rightarrow> adr\<^sub>i\<^sub>p net" 
 
 fun FTPVOIP_VOIP_STA ::
   "((adr\<^sub>i\<^sub>p, ftpvoip) history, adr\<^sub>i\<^sub>p,  ftpvoip) FWStateTransition"
-where
+  where
  "FTPVOIP_VOIP_STA ((a,c,d,ARQ), (InL, policy)) =
           Some (((a,c,d, ARQ)#InL, 
   (allow_from_to_port (1719::port)(subnet_of d) (subnet_of c)) \<Oplus> policy))"
@@ -219,17 +219,17 @@ where
 
 fun FTPVOIP_VOIP_STD ::
   "((adr\<^sub>i\<^sub>p, ftpvoip) history, adr\<^sub>i\<^sub>p,  ftpvoip) FWStateTransition"
-where 
- "FTPVOIP_VOIP_STD (p,s) = Some s" 
+  where 
+    "FTPVOIP_VOIP_STD (p,s) = Some s" 
 
 definition FTP_VOIP_STA :: "((adr\<^sub>i\<^sub>p, ftpvoip) history, adr\<^sub>i\<^sub>p,  ftpvoip) FWStateTransition"
-where 
- "FTP_VOIP_STA = ((\<lambda>(x,x). Some x) \<circ>\<^sub>m ((FTPVOIP_FTP_STA \<Otimes>\<^sub>S FTPVOIP_VOIP_STA o (\<lambda> (p,x). (p,x,x)))))"
+  where 
+    "FTP_VOIP_STA = ((\<lambda>(x,x). Some x) \<circ>\<^sub>m ((FTPVOIP_FTP_STA \<Otimes>\<^sub>S FTPVOIP_VOIP_STA o (\<lambda> (p,x). (p,x,x)))))"
 
 
 definition FTP_VOIP_STD :: "((adr\<^sub>i\<^sub>p, ftpvoip) history, adr\<^sub>i\<^sub>p,  ftpvoip) FWStateTransition"
-where 
- "FTP_VOIP_STD = (\<lambda>(x,x). Some x) \<circ>\<^sub>m ((FTPVOIP_FTP_STD \<Otimes>\<^sub>S FTPVOIP_VOIP_STD o (\<lambda> (p,x). (p,x,x))))"
+  where 
+    "FTP_VOIP_STD = (\<lambda>(x,x). Some x) \<circ>\<^sub>m ((FTPVOIP_FTP_STD \<Otimes>\<^sub>S FTPVOIP_VOIP_STD o (\<lambda> (p,x). (p,x,x))))"
 
 definition FTPVOIP_TRPolicy where 
  "FTPVOIP_TRPolicy = policy2MON ( 

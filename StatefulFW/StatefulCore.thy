@@ -37,10 +37,10 @@
 
 section {* Stateful Protocols *}
 theory 
-  Stateful 
-imports 
-  "../PacketFilter/PacketFilter" 
-  LTL_alike
+  StatefulCore 
+  imports 
+    "../PacketFilter/PacketFilter" 
+    LTL_alike
 begin
 
 text{* 
@@ -66,7 +66,7 @@ text{*
   At first we hence need a state. It is a tuple from some memory to be refined later and the 
   current policy. 
 *}
-
+  
 type_synonym ('\<alpha>,'\<beta>,'\<gamma>) FWState = "'\<alpha> \<times> (('\<beta>,'\<gamma>) packet \<mapsto> unit)"  
 
 
@@ -74,12 +74,12 @@ type_synonym ('\<alpha>,'\<beta>,'\<gamma>) FWState = "'\<alpha> \<times> (('\<b
 text{* Having a state, we need of course some state transitions. Such
   a transition can happen every time a new packet arrives. State
   transitions can be modelled using a state-exception monad.  
-  We provide two types of firewall monads: one *}
+*}
 
 
 type_synonym ('\<alpha>,'\<beta>,'\<gamma>) FWStateTransitionP =
              "('\<beta>,'\<gamma>) packet \<Rightarrow> ((('\<beta>,'\<gamma>) packet \<mapsto> unit) decision, ('\<alpha>,'\<beta>,'\<gamma>) FWState) MON\<^sub>S\<^sub>E"
-
+             
 type_synonym ('\<alpha>,'\<beta>,'\<gamma>) FWStateTransition = 
              "(('\<beta>,'\<gamma>) packet \<times> ('\<alpha>,'\<beta>,'\<gamma>) FWState) \<rightharpoonup> ('\<alpha>,'\<beta>,'\<gamma>) FWState"
 
@@ -88,19 +88,19 @@ type_synonym ('\<beta>,'\<gamma>) history = "('\<beta>,'\<gamma>) packet list"
 
 
 fun packet_with_id where
- "packet_with_id [] i = []"
+  "packet_with_id [] i = []"
 |"packet_with_id (x#xs) i = (if id x = i then (x#(packet_with_id xs i)) else (packet_with_id xs i))"
 
 
 fun ids1 where
  "ids1 i (x#xs) = (id x = i \<and> ids1 i xs)"
 |"ids1 i [] = True"
-
+  
 fun ids where
- "ids a (x#xs) = (NetworkCore.id x \<in> a \<and> ids a xs)"
+  "ids a (x#xs) = (NetworkCore.id x \<in> a \<and> ids a xs)"
 |"ids a [] = True"
 
 definition applyPolicy::  "('i \<times> ('i \<mapsto> 'o)) \<mapsto> 'o" 
-where     "applyPolicy = (\<lambda> (x,z). z x)"  
+  where     "applyPolicy = (\<lambda> (x,z). z x)"  
 
 end

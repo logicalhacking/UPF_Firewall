@@ -38,8 +38,8 @@
 subsection {* The File Transfer Prototol (ftp) *}
 theory 
   FTP
-imports 
-  Stateful 
+  imports 
+    StatefulCore 
 begin
 
 subsubsection{* The protocol syntax *}
@@ -102,7 +102,7 @@ definition
 
 fun are_ftp_other where
   "are_ftp_other i (x#xs) = (is_ftp_other i x \<and> are_ftp_other i xs)"
- |"are_ftp_other i [] = True"
+  |"are_ftp_other i [] = True"
 
 subsubsection{* The protocol policy specification *}
 text{*
@@ -124,7 +124,7 @@ fun last_opened_port where
 | "last_opened_port x [] = undefined"
 
 fun FTP_STA :: "((adr\<^sub>i\<^sub>p,msg) history, adr\<^sub>i\<^sub>p, msg) FWStateTransition"
-where 
+  where 
  (* FTP_PORT_REQUEST *)
    "FTP_STA ((i,s,d,ftp_port_request pr), (log, pol)) =
        (if before(Not o is_ftp_close i)(is_init i) log \<and>
@@ -144,18 +144,18 @@ where
 
 
 fun    FTP_STD :: "((adr\<^sub>i\<^sub>p,msg) history, adr\<^sub>i\<^sub>p, msg) FWStateTransition"
-where "FTP_STD (p,s) = Some s" 
+  where "FTP_STD (p,s) = Some s" 
 
 definition TRPolicy ::"    (adr\<^sub>i\<^sub>p,msg)packet \<times> (adr\<^sub>i\<^sub>p,msg)history \<times> ((adr\<^sub>i\<^sub>p,msg)packet \<mapsto> unit)
                         \<mapsto> (unit             \<times> (adr\<^sub>i\<^sub>p,msg)history \<times> ((adr\<^sub>i\<^sub>p,msg)packet \<mapsto> unit))"
-where     "TRPolicy = ((FTP_STA,FTP_STD) \<Otimes>\<^sub>\<nabla> applyPolicy) o (\<lambda>(x,(y,z)).((x,z),(x,(y,z))))"
+  where     "TRPolicy = ((FTP_STA,FTP_STD) \<Otimes>\<^sub>\<nabla> applyPolicy) o (\<lambda>(x,(y,z)).((x,z),(x,(y,z))))"
 
 definition TRPolicy\<^sub>M\<^sub>o\<^sub>n
-where     "TRPolicy\<^sub>M\<^sub>o\<^sub>n = policy2MON(TRPolicy)"
+  where     "TRPolicy\<^sub>M\<^sub>o\<^sub>n = policy2MON(TRPolicy)"
 
 text{* If required to contain the policy in the output *}
 definition TRPolicy\<^sub>M\<^sub>o\<^sub>n' 
-where     "TRPolicy\<^sub>M\<^sub>o\<^sub>n' = policy2MON (((\<lambda>(x,y,z). (z,(y,z))) o_f  TRPolicy ))"
+  where     "TRPolicy\<^sub>M\<^sub>o\<^sub>n' = policy2MON (((\<lambda>(x,y,z). (z,(y,z))) o_f  TRPolicy ))"
 
 text{* 
   Now we specify our test scenario in more detail. We could test:
@@ -184,9 +184,9 @@ text{*
 fun
   is_ftp :: "ftp_states \<Rightarrow> adr\<^sub>i\<^sub>p  \<Rightarrow> adr\<^sub>i\<^sub>p \<Rightarrow> id \<Rightarrow> port \<Rightarrow>
             (adr\<^sub>i\<^sub>p,msg) history \<Rightarrow> bool"
-where
- "is_ftp H c s i p [] = (H=S3)"
-|"is_ftp H c s i p (x#InL) = (snd s = 21  \<and>((\<lambda> (id,sr,de,co). (((id = i \<and> (
+  where
+    "is_ftp H c s i p [] = (H=S3)"
+  |"is_ftp H c s i p (x#InL) = (snd s = 21  \<and>((\<lambda> (id,sr,de,co). (((id = i \<and> (
    (H=ftp_states.S2 \<and> sr = c \<and> de = s \<and> co = ftp_init \<and> is_ftp S3 c s i p InL) \<or> 
    (H=ftp_states.S1 \<and> sr = c \<and> de = s \<and> co = ftp_port_request p \<and>  is_ftp S2 c s i p InL) \<or> 
    (H=ftp_states.S1 \<and> sr = s \<and> de = (fst c,p) \<and> co= ftp_data \<and> is_ftp S1 c s i p InL) \<or> 
@@ -195,7 +195,7 @@ where
 
 
 definition  is_single_ftp_run :: "adr\<^sub>i\<^sub>p src \<Rightarrow> adr\<^sub>i\<^sub>p dest \<Rightarrow> id \<Rightarrow> port  \<Rightarrow> (adr\<^sub>i\<^sub>p,msg) history set" 
-where      "is_single_ftp_run s d i p = {x. (is_ftp S0 s d i p x)}"
+  where      "is_single_ftp_run s d i p = {x. (is_ftp S0 s d i p x)}"
 
 text{* 
   The following constant then returns a set of all the historys which denote such a normal 
@@ -213,28 +213,19 @@ definition
           (is_ftp S0 s2 d2 i2 p2 (packet_with_id x i2))}"
 
 lemma subnetOf_lemma: "(a::int) \<noteq> (c::int) \<Longrightarrow> \<forall>x\<in>subnet_of (a, b::port). (c, d) \<notin> x"
-apply (rule ballI)
-apply (simp add: subnet_of_int_def)
-done
+  by (rule ballI, simp add: subnet_of_int_def)
 
 lemma subnetOf_lemma2: " \<forall>x\<in>subnet_of (a::int, b::port). (a, b) \<in>  x"
-apply (rule ballI)
-apply (simp add: subnet_of_int_def)
-done
+  by (rule ballI, simp add: subnet_of_int_def)
 
 lemma subnetOf_lemma3: "(\<exists>x. x \<in> subnet_of (a::int, b::port))"
-apply (rule exI)
-apply (simp add: subnet_of_int_def)
-done
+  by (rule exI,  simp add: subnet_of_int_def)
 
 lemma subnetOf_lemma4: "\<exists>x\<in>subnet_of (a::int, b::port). (a, c::port) \<in> x"
-apply (rule bexI)
-apply (simp_all add: subnet_of_int_def)
-done
+  by (rule bexI, simp_all add: subnet_of_int_def)
 
 lemma port_open_lemma: "\<not> (Ex (port_open [] (x::port)))"
-apply (simp add: port_open_def)
-done
+  by (simp add: port_open_def)
 
 lemmas FTPLemmas =  TRPolicy_def applyPolicy_def policy2MON_def 
                     Let_def in_subnet_def src_def
@@ -245,4 +236,3 @@ lemmas FTPLemmas =  TRPolicy_def applyPolicy_def policy2MON_def
                     NetworkCore.id_def adr\<^sub>i\<^sub>pLemmas port_open_lemma
                     bind_SE_def unit_SE_def valid_SE_def
 end
-

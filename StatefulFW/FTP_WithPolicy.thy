@@ -38,8 +38,8 @@
 subsection {* FTP enriched with a security policy *}
 theory  
   FTP_WithPolicy
-imports 
-  FTP 
+  imports 
+    FTP 
 begin
 
 text{*  FTP where the policy is part of the output.  *}
@@ -49,7 +49,7 @@ definition POL :: "'a \<Rightarrow> 'a"   where  "POL x = x"
 text{* Variant 2 takes the policy into the output *}
 fun FTP_STP ::
   "((id \<rightharpoonup> port), adr\<^sub>i\<^sub>p, msg) FWStateTransitionP"
-where
+  where
 (* FTP_PORT_REQUEST *)
  "FTP_STP (i,s,d,ftp_port_request pr) (ports, policy) = 
   (if p_accept (i,s,d,ftp_port_request pr) policy then
@@ -73,5 +73,3 @@ where
                    then Some (allow (POL (snd x)),((fst x),snd x)) 
                    else Some (deny (POL (snd x)),(fst x,snd x)))"
 end
-
-

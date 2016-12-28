@@ -36,8 +36,10 @@
  *****************************************************************************)
 
 subsection {* Termporal Combinators *}
-theory LTL_alike 
-imports Main
+theory
+  LTL_alike 
+  imports 
+    Main
 begin
 
 text{* 
@@ -61,7 +63,7 @@ where
 |  "atom p (a # S) = (p a)"
 
 lemma holds_mono : "\<guillemotleft>q\<guillemotright> s \<Longrightarrow> \<guillemotleft>q\<guillemotright> (s @ t)"
-by(cases s,simp_all)
+  by(cases s,simp_all)
 
 
 fun always :: "('\<alpha> list \<Rightarrow> bool) \<Rightarrow> '\<alpha> list \<Rightarrow> bool" ("\<box>")
@@ -74,7 +76,7 @@ text{*
   locally, this paves the way to a wealth of library lemmas. 
 *}
 lemma always_is_listall : "(\<box> \<guillemotleft>p\<guillemotright>) (t) = list_all (p) (t)"
-by(induct t, simp_all)
+  by(induct t, simp_all)
 
 fun eventually :: "('\<alpha> list \<Rightarrow> bool) \<Rightarrow> '\<alpha> list \<Rightarrow> bool" ("\<diamondsuit>")
 where 
@@ -87,7 +89,7 @@ text{*
   locally, this paves the way to a wealth of library lemmas. 
 *}
 lemma eventually_is_listex : "(\<diamondsuit> \<guillemotleft>p\<guillemotright>) (t) = list_ex (p) (t)"
-by(induct t, simp_all)
+  by(induct t, simp_all)
 
 text{*  
   The next two constants will help us later in defining the state transitions. The constant 
@@ -126,35 +128,35 @@ text{* This leads to this amazingly tricky proof:*}
 lemma before_vs_until: 
 "(before p q) = ((\<box>\<guillemotleft>p\<guillemotright>) U \<guillemotleft>q\<guillemotright>)"
 proof -
-     have A:"\<And>a. q a \<Longrightarrow> (\<exists>s t. [a] = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t)" 
-          apply(rule_tac x="[]" in exI)
-          apply(rule_tac x="[a]" in exI, simp)
-     done
-     have B:"\<And>a. (\<exists>s t. [a] = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t) \<Longrightarrow> q a"
-          apply auto
-          apply(case_tac "t=[]", auto simp:List.neq_Nil_conv)
-          apply(case_tac "s=[]", auto simp:List.neq_Nil_conv)
-     done
-     have C:"\<And>a aa list.(q a \<or> p a \<and> (\<exists>s t. aa # list = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t)) 
+  have A:"\<And>a. q a \<Longrightarrow> (\<exists>s t. [a] = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t)" 
+    apply(rule_tac x="[]" in exI)
+    apply(rule_tac x="[a]" in exI, simp)
+    done
+  have B:"\<And>a. (\<exists>s t. [a] = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t) \<Longrightarrow> q a"
+    apply auto
+    apply(case_tac "t=[]", auto simp:List.neq_Nil_conv)
+    apply(case_tac "s=[]", auto simp:List.neq_Nil_conv)
+    done
+  have C:"\<And>a aa list.(q a \<or> p a \<and> (\<exists>s t. aa # list = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t)) 
                          \<Longrightarrow> (\<exists>s t. a # aa # list = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t)"
-          apply auto
-          apply(rule_tac x="[]" in exI)
-          apply(rule_tac x="a # aa # list" in exI, simp)
-          apply(rule_tac x="a # s" in exI)
-          apply(rule_tac x="t" in exI,simp)
-          done
-     have D:"\<And>a aa list.(\<exists>s t. a # aa # list = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t)
+    apply auto
+     apply(rule_tac x="[]" in exI)
+     apply(rule_tac x="a # aa # list" in exI, simp)
+    apply(rule_tac x="a # s" in exI)
+    apply(rule_tac x="t" in exI,simp)
+    done
+  have D:"\<And>a aa list.(\<exists>s t. a # aa # list = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t)
                          \<Longrightarrow> (q a \<or> p a \<and> (\<exists>s t. aa # list = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t))"
-          apply auto
-          apply(case_tac "s", auto simp:List.neq_Nil_conv)
-          apply(case_tac "s", auto simp:List.neq_Nil_conv)
-          done
-     show ?thesis
-          apply(rule ext,induct_tac "x", simp,
-                case_tac "list",simp_all)
-          apply(rule iffI,erule A, erule B)
-          apply(rule iffI,erule C, erule D)
-          done
+    apply auto
+     apply(case_tac "s", auto simp:List.neq_Nil_conv)
+    apply(case_tac "s", auto simp:List.neq_Nil_conv)
+    done
+  show ?thesis
+    apply(rule ext,induct_tac "x", simp,
+        case_tac "list",simp_all)
+     apply(rule iffI,erule A, erule B)
+    apply(rule iffI,erule C, erule D)
+    done
 qed
 
 end
