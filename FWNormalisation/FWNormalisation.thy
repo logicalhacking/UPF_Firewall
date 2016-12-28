@@ -35,8 +35,11 @@
  *****************************************************************************)
 
 chapter {* Firewall Policy Normalisation *}
-theory  FWNormalisation
-imports NormalisationIPPProofs
+theory  
+  FWNormalisation
+  imports 
+    NormalisationIPPProofs
+    ElementaryRules
 begin
-
+  
 end

@@ -36,41 +36,43 @@
  *****************************************************************************)
 
 subsection {* Elementary Firewall Policy Transformation Rules *} 
-theory ElementaryRules
-imports FWNormalisationCore
+theory 
+  ElementaryRules
+  imports 
+    FWNormalisationCore
 begin
-
-
+  
+  
 text{* 
   This theory contains those elementary transformation rules which are presented in the ICST 
   2010 paper~\cite{brucker.ea:firewall:2010}. They are not used elsewhere.
 *}
-
+  
 lemma elem1:
- "C (AllowPortFromTo x y p \<oplus> DenyAllFromTo x y) = C (DenyAllFromTo x y)"
-by (rule ext, auto simp: PLemmas)
-
-
+  "C (AllowPortFromTo x y p \<oplus> DenyAllFromTo x y) = C (DenyAllFromTo x y)"
+  by (rule ext, auto simp: PLemmas)
+    
+    
 lemma elem2:
- "C ((a \<oplus> b) \<oplus> c) = C (a \<oplus> (b \<oplus> c))"
-by (simp add: C.simps) 
-
+  "C ((a \<oplus> b) \<oplus> c) = C (a \<oplus> (b \<oplus> c))"
+  by (simp add: C.simps) 
+    
 lemma elem3:
- "C (AllowPortFromTo x y a \<oplus> AllowPortFromTo x y b) = 
+  "C (AllowPortFromTo x y a \<oplus> AllowPortFromTo x y b) = 
   C (AllowPortFromTo x y b \<oplus> AllowPortFromTo x y a)"
-by (rule ext, auto simp: PLemmas)
-
+  by (rule ext, auto simp: PLemmas)
+    
 lemma elem4:
- "C (a \<oplus> DenyAll) = C DenyAll"
-by (rule ext, auto simp: PLemmas)
-
+  "C (a \<oplus> DenyAll) = C DenyAll"
+  by (rule ext, auto simp: PLemmas)
+    
 lemma elem5:
- "C (DenyAllFromTo x y \<oplus> DenyAllFromTo u v) = C (DenyAllFromTo u v \<oplus> DenyAllFromTo x y)"
-by (rule ext, auto simp: PLemmas)
-
-
+  "C (DenyAllFromTo x y \<oplus> DenyAllFromTo u v) = C (DenyAllFromTo u v \<oplus> DenyAllFromTo x y)"
+  by (rule ext, auto simp: PLemmas)
+    
+    
 lemma elem6: 
- "dom (C a) \<inter> dom (C b) = {} \<Longrightarrow> C (a \<oplus> b) = C (b \<oplus> a)"
-by (rule ext, metis C.simps(4) map_add_comm)
-
+  "dom (C a) \<inter> dom (C b) = {} \<Longrightarrow> C (a \<oplus> b) = C (b \<oplus> a)"
+  by (rule ext, metis C.simps(4) map_add_comm)
+    
 end

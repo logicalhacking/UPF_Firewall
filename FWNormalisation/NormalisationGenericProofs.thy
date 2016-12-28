@@ -36,30 +36,27 @@
  *****************************************************************************)
 
 subsection{* Normalisation Proofs (Generic) *}
-theory NormalisationGenericProofs
-  imports 
-    FWNormalisationCore
+  theory
+    NormalisationGenericProofs
+    imports 
+      FWNormalisationCore
 begin
   
-text {* This theory contains the generic proofs of the normalisation
-procedure, i.e. those which are independent from the concrete
-semantical interpretation function.  *}
-  
-  
+text {* 
+  This theory contains the generic proofs of the normalisation procedure, i.e. those which 
+  are independent from the concrete semantical interpretation function.  
+*}
+    
 lemma domNMT: "dom X \<noteq> {} \<Longrightarrow> X \<noteq> \<emptyset>"
-  apply auto
-  done
+  by auto
     
 lemma denyNMT: "deny_all \<noteq>  \<emptyset>"
   apply (rule domNMT)
-  apply (simp add: deny_all_def dom_def)
-  done
+  by (simp add: deny_all_def dom_def)
     
-    
-lemma wellformed_policy1_charn[rule_format] : "wellformed_policy1 p \<longrightarrow>
-DenyAll \<in> set p \<longrightarrow> (\<exists> p'. p = DenyAll # p' \<and> DenyAll \<notin> set p')"
+lemma wellformed_policy1_charn[rule_format]: 
+"wellformed_policy1 p \<longrightarrow> DenyAll \<in> set p \<longrightarrow> (\<exists> p'. p = DenyAll # p' \<and> DenyAll \<notin> set p')"
   by(induct p,simp_all)
-    
     
 lemma singleCombinatorsConc: "singleCombinators (x#xs) \<Longrightarrow> singleCombinators xs"
   by (case_tac x,simp_all)
@@ -69,7 +66,6 @@ lemma aux0_0: "singleCombinators x \<Longrightarrow> \<not> (\<exists> a b. (a\<
   apply (rule allI)+
   by (case_tac a,simp_all)
     
-    
 lemma aux0_4: "(a \<in> set x \<or> a \<in> set y) = (a \<in> set (x@y))"
   by auto
     
@@ -77,26 +73,21 @@ lemma aux0_1: "\<lbrakk>singleCombinators xs; singleCombinators [x]\<rbrakk> \<L
                singleCombinators (x#xs)"
   by (case_tac x,simp_all) 
     
-    
 lemma aux0_6: "\<lbrakk>singleCombinators xs; \<not> (\<exists> a b. x = a \<oplus> b)\<rbrakk> \<Longrightarrow>
                singleCombinators(x#xs)"
   apply (rule aux0_1,simp_all)
   apply (case_tac x,simp_all)
-  apply auto
-  done
+  by auto
     
 lemma aux0_5: " \<not> (\<exists> a b. (a\<oplus>b) \<in> set x) \<Longrightarrow> singleCombinators x"
   apply (induct x)   
    apply simp_all 
   by (metis aux0_6)
     
-    
-    
 lemma ANDConc[rule_format]: "allNetsDistinct (a#p) \<longrightarrow> allNetsDistinct (p)"
   apply (simp add: allNetsDistinct_def)
   apply (case_tac "a")
   by simp_all
-    
     
 lemma aux6: "twoNetsDistinct a1 a2 a b \<Longrightarrow>
             dom (deny_all_from_to a1 a2) \<inter> dom (deny_all_from_to a b) = {}"
@@ -105,7 +96,6 @@ lemma aux6: "twoNetsDistinct a1 a2 a b \<Longrightarrow>
     
 lemma aux5[rule_format]: "(DenyAllFromTo a b) \<in> set p \<longrightarrow> a \<in> set (net_list p)"
   by (rule net_list_aux.induct,simp_all) 
-    
     
 lemma aux5a[rule_format]: "(DenyAllFromTo b a) \<in> set p \<longrightarrow> a \<in> set (net_list p)"
   by (rule net_list_aux.induct,simp_all) 
@@ -121,24 +111,21 @@ lemma aux5d[rule_format]:
 lemma aux10[rule_format]: "a \<in> set (net_list p) \<longrightarrow> a \<in> set (net_list_aux p)"
   by simp
     
-    
-lemma srcInNetListaux[simp]: "\<lbrakk>x \<in> set p; singleCombinators[x]; x \<noteq> DenyAll\<rbrakk> \<Longrightarrow>
-                             srcNet x \<in> set (net_list_aux p)"
+lemma srcInNetListaux[simp]: 
+  "\<lbrakk>x \<in> set p; singleCombinators[x]; x \<noteq> DenyAll\<rbrakk> \<Longrightarrow> srcNet x \<in> set (net_list_aux p)"
   apply (induct p)
    apply simp_all
   apply (case_tac "x = a", simp_all)
    apply (case_tac a, simp_all)+
   done 
     
-    
-lemma destInNetListaux[simp]: "\<lbrakk>x \<in> set p; singleCombinators[x]; x \<noteq> DenyAll\<rbrakk> \<Longrightarrow>
-                               destNet x \<in> set (net_list_aux p)"
+lemma destInNetListaux[simp]: 
+  "\<lbrakk>x \<in> set p; singleCombinators[x]; x \<noteq> DenyAll\<rbrakk> \<Longrightarrow> destNet x \<in> set (net_list_aux p)"
   apply (induct p)
    apply simp_all
   apply (case_tac "x = a", simp_all)
    apply (case_tac a, simp_all)+
   done 
-    
     
 lemma tND1: "\<lbrakk>allNetsDistinct p; x \<in> set p; y \<in> set p; a = srcNet x;
              b = destNet x; c = srcNet y; d = destNet y; a \<noteq> c;
@@ -189,8 +176,6 @@ lemma aux[rule_format]: "a \<in> set (removeShadowRules2 p) \<longrightarrow> a 
 lemma aux12: "\<lbrakk>a \<in> x; b \<notin> x\<rbrakk> \<Longrightarrow> a \<noteq> b"
   by auto
     
-    
-    
 lemma ND0aux1[rule_format]: "DenyAllFromTo x y \<in> set b \<Longrightarrow>  
                              x \<in> set (net_list_aux b)"
   by (metis aux5 net_list.simps set_remdups)
@@ -233,8 +218,7 @@ lemma aNDSubset: "\<lbrakk>singleCombinators a;set a \<subseteq> set b; allNetsD
   apply (rule allI)+
   apply (rule impI)+
   apply (drule_tac x = "aa" in spec, drule_tac x = "ba" in spec)
-  apply (metis subsetD aNDSubsetaux)
-  done
+  using aNDSubsetaux by blast
     
 lemma aNDSetsEq: "\<lbrakk>singleCombinators a; singleCombinators b; set a = set b; 
                   allNetsDistinct b\<rbrakk> \<Longrightarrow> allNetsDistinct a"
@@ -242,21 +226,15 @@ lemma aNDSetsEq: "\<lbrakk>singleCombinators a; singleCombinators b; set a = set
   apply (rule allI)+
   apply (rule impI)+
   apply (drule_tac x = "aa" in spec, drule_tac x = "ba" in spec)
-  apply (metis aNDSetsEqaux )
-  done
+  using aNDSetsEqaux by auto
     
 lemma SCConca: "\<lbrakk>singleCombinators p; singleCombinators [a]\<rbrakk> \<Longrightarrow> 
-                singleCombinators (a#p)"
-  by (case_tac "a",simp_all)
+                singleCombinators (a#p)" 
+  by(metis aux0_1)
     
 lemma aux3[simp]: "\<lbrakk>singleCombinators p; singleCombinators [a];  
-                   allNetsDistinct (a#p)\<rbrakk> \<Longrightarrow> allNetsDistinct (a#a#p)"
-  apply (insert aNDSubset[of "(a#a#p)" "(a#p)"])
-  by (simp add: SCConca)
-    
-    
-    
-    
+                     allNetsDistinct (a#p)\<rbrakk> \<Longrightarrow> allNetsDistinct (a#a#p)"
+  by (metis aNDSetsEq aux0_1 insert_absorb2 list.set(2))
     
 lemma wp1_aux1a[rule_format]: "xs \<noteq> [] \<longrightarrow> wellformed_policy1_strong (xs @ [x]) \<longrightarrow> 
                                wellformed_policy1_strong xs"
@@ -307,10 +285,9 @@ lemma waux3[rule_format]: "\<lbrakk>x \<noteq> a;  x \<notin> set p\<rbrakk> \<L
   by (metis aux79)
     
 lemma wellformed1_sorted_aux[rule_format]: "wellformed_policy1 (x#p) \<Longrightarrow> 
-                                            wellformed_policy1 (insort x p l)" 
-  apply (case_tac x,simp_all) 
-  by (rule waux2,rule waux3, simp_all)+
-    
+                                            wellformed_policy1 (insort x p l)" try
+  by (metis NormalisationGenericProofs.set_insort list.set(2) saux waux2 wellformed_eq 
+            wellformed_policy1_strong.simps(2))
     
 lemma wellformed1_sorted_auxQ[rule_format]: "wellformed_policy1 (p) \<Longrightarrow> 
                                             wellformed_policy1 (qsort p l)" 
@@ -318,13 +295,10 @@ proof (induct p)
   case Nil show ?case by simp
 next
   case (Cons a S) then show ?case
-    apply simp_all
+    apply simp_all 
     apply (cases a,simp_all)
-      by  (metis Combinators.simps append_Cons append_Nil qsort.simps(2) set_ConsD set_qsort waux2)+
+    by  (metis Combinators.simps append_Cons append_Nil qsort.simps(2) set_ConsD set_qsort waux2)+
   qed        
-    
-    
-    
     
 lemma SR1Subset: "set (removeShadowRules1 p) \<subseteq> set p"
   apply (induct_tac p, simp_all)
@@ -346,7 +320,7 @@ lemma setInsert[simp]: "set list \<subseteq> insert a (set list)"
 lemma SC_RS1[rule_format,simp]: "singleCombinators p \<longrightarrow> allNetsDistinct p \<longrightarrow>
     singleCombinators (removeShadowRules1 p)"
   apply (induct_tac p)
-  apply simp_all
+   apply simp_all
   using ANDConc singleCombinatorsConc by blast
     
 lemma RS2Set[rule_format]: "set (removeShadowRules2 p) \<subseteq> set p"
@@ -363,14 +337,12 @@ lemma denyAllDom[simp]: "x \<in> dom (deny_all)"
 lemma lCdom2: "(list2FWpolicy (a @ (b @ c))) = (list2FWpolicy ((a@b)@c))"
   by auto
     
-    
 lemma SCConcEnd: "singleCombinators (xs @ [xa]) \<Longrightarrow> singleCombinators xs"
   by (induct "xs", simp_all, case_tac a, simp_all)
     
 lemma list2FWpolicyconc[rule_format]: "a \<noteq> [] \<longrightarrow>
                                (list2FWpolicy (xa # a)) = (xa) \<oplus> (list2FWpolicy a)"
   by (induct a,simp_all)
-    
     
 lemma wp1n_tl [rule_format]: "wellformed_policy1_strong p \<longrightarrow>
                               p = (DenyAll#(tl p))"
@@ -423,8 +395,7 @@ lemma domInterMT[rule_format]: "\<lbrakk>dom a \<inter> dom b = {}; x \<in> dom 
     
 lemma domComm: "dom a \<inter> dom b = dom b \<inter> dom a"
   by auto
-    
-    
+        
 lemma r_not_DA_in_tl[rule_format]: 
   "wellformed_policy1_strong p \<longrightarrow>  a \<in> set p\<longrightarrow> a \<noteq> DenyAll \<longrightarrow> a \<in> set (tl p)"
   by (induct p,simp_all)
@@ -441,9 +412,7 @@ lemma l2p_aux[rule_format]: "list \<noteq> [] \<longrightarrow>
     
 lemma l2p_aux2[rule_format]: "list = [] \<Longrightarrow> list2FWpolicy (a # list) = a"
   by simp
-    
-    
-    
+           
 lemma aux7aa: 
   assumes 1 : "AllowPortFromTo a b poo \<in> set p" 
     and    2 : "allNetsDistinct ((AllowPortFromTo c d po) # p)"
@@ -459,10 +428,9 @@ next
         list.set_intros(2) twoNetsDistinct_def)
 qed
   
-  
 lemma ANDConcEnd: "\<lbrakk> allNetsDistinct (xs @ [xa]); singleCombinators xs\<rbrakk> \<Longrightarrow> 
                    allNetsDistinct xs"
-  by (rule aNDSubset) auto
+  by (rule aNDSubset, auto)
     
 lemma WP1ConcEnd[rule_format]: 
   "wellformed_policy1 (xs@[xa]) \<longrightarrow> wellformed_policy1 xs"
@@ -505,20 +473,14 @@ next
   qed
 qed
   
-  
-  
-  
 lemma SC1[simp]: "singleCombinators p \<Longrightarrow>singleCombinators (removeShadowRules1 p)"
   by (erule SCSubset) (rule SR1Subset)
     
 lemma SC2[simp]: "singleCombinators p \<Longrightarrow>singleCombinators (removeShadowRules2 p)"
   by (erule SCSubset) (rule RS2Set)
     
-    
 lemma SC3[simp]: "singleCombinators p \<Longrightarrow> singleCombinators (sort p l)"
   by (erule SCSubset) simp
-    
-    
     
 lemma SC3Q[simp]: "singleCombinators p \<Longrightarrow> singleCombinators (qsort p l)"
   by (erule SCSubset) simp
@@ -548,8 +510,6 @@ lemma aND_sortQ[simp]: "\<lbrakk>singleCombinators p; allNetsDistinct p\<rbrakk>
                        allNetsDistinct (qsort p l)"
   apply (rule aNDSubset)
   by (erule SC3Q, simp_all)
-    
-    
     
 lemma inRS2[rule_format,simp]: "x \<notin> set p \<longrightarrow> x \<notin> set (removeShadowRules2 p)"
   apply (insert RS2Set [of p])
@@ -627,11 +587,11 @@ lemma sortedConcStart[rule_format]:
   singleCombinators [a] \<longrightarrow> singleCombinators [aa] \<longrightarrow> singleCombinators p \<longrightarrow> 
   sorted (a#p) l"
   apply (induct p)
-  apply simp_all
+   apply simp_all
   apply (rule impI)+
   apply simp
   apply (rule_tac y = "aa" in order_trans)
-  apply simp_all
+         apply simp_all
   apply (case_tac ab, simp_all)
   done
     
@@ -644,14 +604,14 @@ lemma sorted_is_smaller[rule_format]:
   "sorted (a # p) l \<longrightarrow> in_list a l \<longrightarrow> in_list b l \<longrightarrow> all_in_list p l \<longrightarrow>  
   singleCombinators [a] \<longrightarrow> singleCombinators p \<longrightarrow> b \<in> set p \<longrightarrow> smaller a b l"
   apply (induct p)
-  apply (auto intro: singleCombinatorsConc sortedConcStart) 
+   apply (auto intro: singleCombinatorsConc sortedConcStart) 
   done
     
 lemma sortedConcEnd[rule_format]: "sorted (a # p) l \<longrightarrow> in_list a l \<longrightarrow> 
                                    all_in_list p l \<longrightarrow> singleCombinators [a] \<longrightarrow> 
                                    singleCombinators p  \<longrightarrow> sorted p l"
   apply (induct p)
-  apply (auto intro: singleCombinatorsConc sortedConcStart)
+   apply (auto intro: singleCombinatorsConc sortedConcStart)
   done
     
 lemma in_set_in_list[rule_format]: "a \<in> set p \<longrightarrow> all_in_list p l\<longrightarrow> in_list a l"
@@ -661,14 +621,14 @@ lemma sorted_Consb[rule_format]:
   "all_in_list (x#xs) l \<longrightarrow> singleCombinators (x#xs) \<longrightarrow> 
     (sorted xs l & (ALL y:set xs. smaller x y l)) \<longrightarrow>  (sorted (x#xs) l) "
   apply(induct xs arbitrary: x) 
-  apply (auto simp: order_trans)
+   apply (auto simp: order_trans)
   done
     
 lemma sorted_Cons: "\<lbrakk>all_in_list (x#xs) l; singleCombinators (x#xs)\<rbrakk> \<Longrightarrow> 
               (sorted xs l & (ALL y:set xs. smaller x y l)) =  (sorted (x#xs) l)"
   apply auto
-  apply (rule sorted_Consb, simp_all)
-  apply (metis singleCombinatorsConc singleCombinatorsStart sortedConcEnd)
+    apply (rule sorted_Consb, simp_all)
+   apply (metis singleCombinatorsConc singleCombinatorsStart sortedConcEnd)
   apply (erule sorted_is_smaller)
   apply (auto intro: singleCombinatorsConc singleCombinatorsStart in_set_in_list)
   done
@@ -677,15 +637,15 @@ lemma smaller_antisym: "\<lbrakk>\<not> smaller a b l; in_list a l; in_list b l;
                         singleCombinators[a]; singleCombinators [b]\<rbrakk> \<Longrightarrow>  
                         smaller b a l"
   apply (case_tac a)
-  apply simp_all
+     apply simp_all
+   apply (case_tac b)
+      apply simp_all
+    apply (simp_all split: if_splits)
+   apply (rule setPaireq)
+   apply simp
   apply (case_tac b)
-  apply simp_all
-  apply (simp_all split: if_splits)
-  apply (rule setPaireq)
-  apply simp
-  apply (case_tac b)
-  apply simp_all
-  apply (simp_all split: if_splits)
+     apply simp_all
+   apply (simp_all split: if_splits)
   done
     
 lemma set_insort_insert: "set (insort x xs l) \<subseteq> insert x (set xs)"
@@ -702,8 +662,8 @@ lemma singleCombinators_insort: "\<lbrakk>singleCombinators [x]; singleCombinato
 lemma all_in_list_insort: "\<lbrakk>all_in_list xs l; singleCombinators (x#xs); 
                            in_list x l\<rbrakk> \<Longrightarrow>  all_in_list (insort x xs l) l"
   apply (rule_tac b = "x#xs" in all_in_listSubset)
-  apply simp_all
-  apply (metis singleCombinatorsConc singleCombinatorsStart
+    apply simp_all
+   apply (metis singleCombinatorsConc singleCombinatorsStart
       singleCombinators_insort)
   apply (rule set_insort_insert)
   done
@@ -714,8 +674,6 @@ lemma sorted_ConsA:"\<lbrakk>all_in_list (x#xs) l; singleCombinators (x#xs)\<rbr
     
 lemma is_in_insort: "y \<in> set xs \<Longrightarrow> y \<in> set (insort x xs l)"
   by (simp add: NormalisationGenericProofs.set_insort) 
-    
-    
     
 lemma sorted_insorta[rule_format]:
   assumes 1 : "sorted (insort x xs l) l"
@@ -732,7 +690,7 @@ next
   then show ?case 
     apply simp
     apply (auto intro: is_in_insort sorted_ConsA set_insort singleCombinators_insort 
-        singleCombinatorsConc sortedConcEnd all_in_list_insort)
+        singleCombinatorsConc sortedConcEnd all_in_list_insort) [1]
     apply(cases "smaller x a l", simp_all)
     by (metis NormalisationGenericProofs.set_insort NormalisationGenericProofs.sorted_Cons 
         all_in_list.simps(2) all_in_list_insort aux0_1 insert_iff singleCombinatorsConc 
@@ -750,11 +708,11 @@ next
   have * : "sorted (a # xs) l \<Longrightarrow>      all_in_list (x # a # xs) l \<Longrightarrow>
               distinct (x # a # xs) \<Longrightarrow>  singleCombinators [x] \<Longrightarrow>
               singleCombinators (a # xs) \<Longrightarrow> sorted (insort x xs l) l" 
-    apply(insert Cons.hyps)apply simp_all
-    apply (metis sorted_Cons all_in_list.simps(2)  singleCombinatorsConc)
+    apply(insert Cons.hyps, simp_all)
+    apply(metis sorted_Cons all_in_list.simps(2)  singleCombinatorsConc)
     done
   show ?case
-    apply(insert Cons.hyps)
+    apply (insert Cons.hyps)
     apply (rule impI)+
     apply (insert *, auto intro!: sorted_Consb)    
   proof (rule_tac b = "x#xs" in all_in_listSubset)
@@ -789,7 +747,6 @@ next
   qed
 qed
   
-  
 lemma sorted_insort: 
   "\<lbrakk>all_in_list (x#xs) l; distinct(x#xs); singleCombinators [x];
                      singleCombinators xs\<rbrakk> \<Longrightarrow>
@@ -806,56 +763,46 @@ lemma distinct_sort[simp]: "distinct (sort xs l) = distinct xs"
 lemma sort_is_sorted[rule_format]: 
   "all_in_list p l \<longrightarrow> distinct p \<longrightarrow> singleCombinators p \<longrightarrow> sorted (sort p l) l"
   apply (induct p)
-  apply (auto intro: SC3 all_in_listSubset singleCombinatorsConc sorted_insort)
-  apply (subst sorted_insort)
-  apply (auto intro: singleCombinatorsConc all_in_listSubset SC3)
-  apply (erule all_in_listSubset)
-  by (auto intro: SC3 singleCombinatorsConc sorted_insort)
-    
-    
-    
+   apply simp
+  by (metis (no_types, lifting) NormalisationGenericProofs.distinct_sort 
+      NormalisationGenericProofs.set_sort SC3 all_in_list.simps(2) all_in_listSubset 
+      distinct.simps(2) set_subset_Cons singleCombinatorsConc singleCombinatorsStart 
+      sort.simps(2) sorted_insortb)
     
 lemma smaller_sym[rule_format]: "all_in_list [a] l \<longrightarrow> smaller a a l"
   by (case_tac a,simp_all)
-    
     
 lemma SC_sublist[rule_format]: 
   "singleCombinators xs \<Longrightarrow> singleCombinators (qsort [y\<leftarrow>xs. P y] l)"
   by (auto intro: SCSubset)
     
-    
 lemma all_in_list_sublist[rule_format]: 
   "singleCombinators xs \<longrightarrow> all_in_list xs l \<longrightarrow> all_in_list (qsort [y\<leftarrow>xs. P y] l) l"
   by (auto intro: all_in_listSubset SC_sublist)
-    
     
 lemma SC_sublist2[rule_format]: 
   "singleCombinators xs \<longrightarrow> singleCombinators ([y\<leftarrow>xs. P y])"
   by (auto intro: SCSubset)
     
-    
 lemma all_in_list_sublist2[rule_format]: 
   "singleCombinators xs \<longrightarrow> all_in_list xs l \<longrightarrow> all_in_list ( [y\<leftarrow>xs. P y]) l"
   by (auto intro: all_in_listSubset SC_sublist2)
-    
     
 lemma all_in_listAppend[rule_format]: 
   "all_in_list (xs) l \<longrightarrow> all_in_list (ys) l \<longrightarrow> all_in_list (xs @ ys) l"
   by (induct xs) simp_all
     
-    
-    
 lemma distinct_sortQ[rule_format]: 
   "singleCombinators xs \<longrightarrow> all_in_list xs l \<longrightarrow> distinct xs \<longrightarrow> distinct (qsort xs l)"
   apply (induct xs l rule: qsort.induct) 
+   apply simp
   apply (auto simp: SC_sublist2 singleCombinatorsConc all_in_list_sublist2)
   done
-    
-    
+        
 lemma singleCombinatorsAppend[rule_format]: 
   "singleCombinators (xs) \<longrightarrow> singleCombinators (ys) \<longrightarrow> singleCombinators (xs @ ys)"
   apply (induct xs, auto)
-  apply (case_tac a,simp_all)+
+   apply (case_tac a,simp_all)+
   done
     
 lemma sorted_append1[rule_format]:
@@ -864,7 +811,7 @@ lemma sorted_append1[rule_format]:
   (sorted (xs@ys) l \<longrightarrow> 
   (sorted xs l & sorted ys l & (\<forall>x \<in> set xs. \<forall>y \<in> set ys. smaller x y l)))"
   apply(induct xs)
-  apply(simp_all)
+   apply(simp_all)
   by (metis NormalisationGenericProofs.sorted_Cons all_in_list.simps(2) all_in_listAppend aux0_1 
       aux0_4 singleCombinatorsAppend singleCombinatorsConc singleCombinatorsStart)
     
@@ -874,7 +821,7 @@ lemma sorted_append2[rule_format]:
    (sorted xs l & sorted ys l & (\<forall>x \<in> set xs. \<forall>y \<in> set ys. smaller x y l)) \<longrightarrow> 
   (sorted (xs@ys) l)"
   apply (induct xs)
-  apply simp_all
+   apply simp_all
   by (metis NormalisationGenericProofs.sorted_Cons all_in_list.simps(2) all_in_listAppend aux0_1 
       aux0_4 singleCombinatorsAppend singleCombinatorsConc singleCombinatorsStart)
     
@@ -885,12 +832,9 @@ lemma sorted_append[rule_format]:
    (sorted xs l & sorted ys l & (\<forall>x \<in> set xs. \<forall>y \<in> set ys. smaller x y l))"
   apply (rule impI)+
   apply (rule iffI)
-  apply (rule sorted_append1,simp_all)
+   apply (rule sorted_append1,simp_all)
   apply (rule sorted_append2,simp_all)
   done
-    
-    
-    
     
 lemma sort_is_sortedQ[rule_format]: 
   "all_in_list p l  \<longrightarrow> singleCombinators p \<longrightarrow> sorted (qsort p l) l"
@@ -941,7 +885,7 @@ next
                        FWNormalisationCore.sorted (x # qsort [y\<leftarrow>xs . smaller x y l] l) l \<and>
                        (\<forall>x'\<in>set (qsort [y\<leftarrow>xs . \<not> smaller x y l] l). 
                                 \<forall>y\<in>set (x # qsort [y\<leftarrow>xs . smaller x y l] l). smaller x' y l)"
-      apply auto
+      apply(auto)[1]
       apply (metis (mono_tags, lifting) SC_sublist all_in_list.simps(2) 
           all_in_list_sublist aux0_1 mem_Collect_eq set_filter set_qsort 
           singleCombinatorsConc singleCombinatorsStart sorted_Consb)
@@ -966,14 +910,13 @@ lemma RS1n_nMT[rule_format,simp]: "p \<noteq> []\<longrightarrow> removeShadowRu
   apply (simp add: removeShadowRules1_alternative_def)
   apply (rule_tac xs = p in rev_induct, simp_all) 
   apply (case_tac "xs = []", simp_all)
-  apply (case_tac x, simp_all)
+   apply (case_tac x, simp_all)
   apply (rule_tac xs = "xs" in rev_induct, simp_all)
-  apply (case_tac x, simp_all)+
+   apply (case_tac x, simp_all)+
   done
     
 lemma RS1N_DA[simp]: "removeShadowRules1_alternative (a@[DenyAll]) = [DenyAll]"
   by (simp add: removeShadowRules1_alternative_def)
-    
     
 lemma WP1n_DA_notinSet[rule_format]: "wellformed_policy1_strong p \<longrightarrow>
                                      DenyAll \<notin> set (tl p)"
@@ -991,10 +934,8 @@ lemma AND_tl[rule_format]: "allNetsDistinct ( p) \<longrightarrow> allNetsDistin
   apply (induct p, simp_all)
   by (auto intro: ANDConc)
     
-    
 lemma distinct_tl[rule_format]: "distinct p \<longrightarrow> distinct (tl p)"
   by (induct p, simp_all)
-    
     
 lemma SC_tl[rule_format]: "singleCombinators ( p) \<longrightarrow> singleCombinators (tl p)"
   by (induct p, simp_all) (auto intro: singleCombinatorsConc) 
@@ -1006,20 +947,16 @@ lemma wp1_tl[rule_format]:
   "p \<noteq> [] \<and> wellformed_policy1 p \<longrightarrow> wellformed_policy1 (tl p)"
   by (induct p) (auto intro: waux2)
     
-    
 lemma wp1_eq[rule_format]: 
   "wellformed_policy1_strong p \<Longrightarrow> wellformed_policy1 p"
   apply (case_tac "DenyAll \<in> set p")
-  apply (subst wellformed_eq)
-  apply (auto elim: waux2)
+   apply (subst wellformed_eq)
+    apply (auto elim: waux2)
   done
-    
     
 lemma wellformed1_alternative_sorted: 
   "wellformed_policy1_strong p \<Longrightarrow> wellformed_policy1_strong (sort p l)"
   by (case_tac "p", simp_all)
-    
-    
     
 lemma wp1n_RS2[rule_format]: 
   "wellformed_policy1_strong p \<longrightarrow> wellformed_policy1_strong (removeShadowRules2 p)"
@@ -1028,9 +965,8 @@ lemma wp1n_RS2[rule_format]:
 lemma RS2_NMT[rule_format]: "p \<noteq> [] \<longrightarrow> removeShadowRules2 p \<noteq> []"
   apply (induct p, simp_all)
   apply (case_tac "p \<noteq> []", simp_all)
-  apply (case_tac "a", simp_all)+
+   apply (case_tac "a", simp_all)+
   done
-    
     
 lemma wp1_alternative_not_mt[simp]: "wellformed_policy1_strong p \<Longrightarrow> p \<noteq> []"
   by auto
@@ -1038,8 +974,6 @@ lemma wp1_alternative_not_mt[simp]: "wellformed_policy1_strong p \<Longrightarro
 lemma AIL1[rule_format,simp]: "all_in_list p l \<longrightarrow>
                                all_in_list (removeShadowRules1 p) l"
   by (induct_tac p, simp_all)
-    
-    
     
 lemma wp1ID: "wellformed_policy1_strong (insertDeny (removeShadowRules1 p))"
   by (induct p, simp_all, case_tac a, simp_all)
@@ -1050,7 +984,6 @@ lemma dRD[simp]: "distinct (remdups p)"
 lemma AILrd[rule_format,simp]: "all_in_list p l \<longrightarrow> all_in_list (remdups p) l"
   by (induct p, simp_all)
     
-    
 lemma AILiD[rule_format,simp]: "all_in_list p l \<longrightarrow> all_in_list (insertDeny p) l"
   apply (induct p, simp_all)
   apply (rule impI, simp)
@@ -1060,7 +993,7 @@ lemma AILiD[rule_format,simp]: "all_in_list p l \<longrightarrow> all_in_list (i
 lemma SCrd[rule_format,simp]:"singleCombinators p\<longrightarrow> singleCombinators(remdups p)"
   apply (induct p, simp_all)
   apply (case_tac a)
-  apply simp_all
+     apply simp_all
   done
     
 lemma SCRiD[rule_format,simp]: "singleCombinators p \<longrightarrow>
@@ -1068,7 +1001,6 @@ lemma SCRiD[rule_format,simp]: "singleCombinators p \<longrightarrow>
   apply (induct p, simp_all)
   apply (case_tac "a", simp_all)
   done
-    
     
 lemma WP1rd[rule_format,simp]: 
   "wellformed_policy1_strong p \<longrightarrow> wellformed_policy1_strong (remdups p)"
@@ -1078,17 +1010,16 @@ lemma ANDrd[rule_format,simp]:
   "singleCombinators p \<longrightarrow> allNetsDistinct p \<longrightarrow> allNetsDistinct (remdups p)"
   apply (rule impI)+
   apply (rule_tac b = p in aNDSubset)
-  apply simp_all
+    apply simp_all
   done
     
 lemma ANDiD[rule_format,simp]: 
   "allNetsDistinct p \<longrightarrow>  allNetsDistinct (insertDeny p)"
   apply (induct p, simp_all)
-  apply (simp add: allNetsDistinct_def)
+   apply (simp add: allNetsDistinct_def)
   apply (auto intro: ANDConc)
   apply (case_tac "a",simp_all add: allNetsDistinct_def)
   done
-    
     
 lemma mr_iD[rule_format]: 
   "wellformed_policy1_strong p  \<longrightarrow> matching_rule x p = matching_rule x (insertDeny p)"
@@ -1097,7 +1028,6 @@ lemma mr_iD[rule_format]:
 lemma WP1iD[rule_format,simp]: "wellformed_policy1_strong p \<longrightarrow>
                                 wellformed_policy1_strong (insertDeny p)"
   by (induct p, simp_all)
-    
     
 lemma DAiniD: "DenyAll \<in> set (insertDeny p)"
   by (induct p, simp_all, case_tac a, simp_all)
@@ -1109,7 +1039,6 @@ lemma AIL2[rule_format,simp]:
   "all_in_list p l \<longrightarrow> all_in_list (removeShadowRules2 p) l"
   by (induct_tac p, simp_all, case_tac a, simp_all)
     
-    
 lemma SCConc: "singleCombinators x \<Longrightarrow>  singleCombinators y \<Longrightarrow> singleCombinators (x@y)"
   apply (rule aux0_5)
   apply (metis aux0_0 aux0_4)
@@ -1118,7 +1047,6 @@ lemma SCConc: "singleCombinators x \<Longrightarrow>  singleCombinators y \<Long
 lemma SCp2l: "singleCombinators (policy2list p)"
   by (induct_tac p) (auto intro: SCConc)
     
-    
 lemma subnetAux: "Dd \<inter> A \<noteq> {} \<Longrightarrow> A \<subseteq> B \<Longrightarrow>  Dd \<inter> B \<noteq> {}"
   by auto
     
@@ -1126,8 +1054,7 @@ lemma soadisj: "x \<in> subnetsOfAdr a \<Longrightarrow> y \<in> subnetsOfAdr a 
   by(simp add: subnetsOfAdr_def netsDistinct_def,auto)
     
 lemma not_member: "\<not> member a (x\<oplus>y) \<Longrightarrow> \<not> member a x"
-  apply auto
-  done
+  by auto
     
 lemma soadisj2: "(\<forall> a x y. x \<in> subnetsOfAdr a \<and> y \<in> subnetsOfAdr a \<longrightarrow> \<not> netsDistinct x y)"
   by (simp add: subnetsOfAdr_def netsDistinct_def, auto)
@@ -1139,13 +1066,11 @@ lemma ndFalse1:
   apply (auto simp: soadisj)
   using soadisj2 by blast
     
-    
 lemma ndFalse2: "(\<forall>a b c d. (a,b)\<in>A  \<and> (c,d)\<in>B \<longrightarrow> netsDistinct b d) \<Longrightarrow>
                  \<exists>(a, b)\<in>A. b \<in> subnetsOfAdr D \<Longrightarrow>
                  \<exists>(a, b)\<in>B. b \<in> subnetsOfAdr D \<Longrightarrow> False"
   apply (auto simp: soadisj)
   using soadisj2 by blast
-    
     
 lemma tndFalse: "(\<forall>a b c d. (a,b)\<in>A  \<and> (c,d)\<in>B \<longrightarrow> twoNetsDistinct a b c d) \<Longrightarrow>
         \<exists>(a, b)\<in>A. a \<in> subnetsOfAdr (D::('a::adr)) \<and> b \<in> subnetsOfAdr (F::'a) \<Longrightarrow> 
@@ -1162,7 +1087,6 @@ lemma sepnMT[rule_format]: "p \<noteq> [] \<longrightarrow> (separate p) \<noteq
 lemma sepDA[rule_format]: "DenyAll \<notin> set p \<longrightarrow> DenyAll \<notin> set (separate p)"
   by (induct p rule: separate.induct)  simp_all
     
-    
 lemma setnMT: "set a = set b \<Longrightarrow> a \<noteq> [] \<Longrightarrow> b \<noteq> []"
   by auto
     
@@ -1177,14 +1101,13 @@ lemma idNMT[rule_format]: "p \<noteq> [] \<longrightarrow> insertDenies p \<note
 lemma OTNoTN[rule_format]: " OnlyTwoNets p \<longrightarrow> x \<noteq> DenyAll \<longrightarrow> x \<in> set p \<longrightarrow>  onlyTwoNets x"
   apply (induct p, simp_all, rename_tac a p)
   apply (intro impI  conjI,  simp)
-  apply (case_tac a, simp_all)
+   apply (case_tac a, simp_all)
   apply (drule mp, simp_all)
   apply (case_tac a, simp_all)
   done
     
 lemma first_isIn[rule_format]:  "\<not> member DenyAll x \<longrightarrow> (first_srcNet x,first_destNet x) \<in> sdnets x"
   by (induct x,case_tac x, simp_all)
-    
     
 lemma sdnets2: 
   "\<exists>a b. sdnets x = {(a, b), (b, a)} \<Longrightarrow> \<not> member DenyAll x \<Longrightarrow>
@@ -1193,7 +1116,6 @@ proof -
   have * : "\<exists>a b. sdnets x = {(a, b), (b, a)} \<Longrightarrow> \<not> member DenyAll x 
             \<Longrightarrow> (first_srcNet x, first_destNet x) \<in> sdnets x" 
     by (erule first_isIn) 
-      
   show     "\<exists>a b. sdnets x = {(a, b), (b, a)} \<Longrightarrow> \<not> member DenyAll x \<Longrightarrow>
                sdnets x = {(first_srcNet x, first_destNet x),  (first_destNet x, first_srcNet x)}"
     using * by auto
@@ -1206,7 +1128,6 @@ lemma alternativelistconc1[rule_format]:
 lemma alternativelistconc2[rule_format]: 
   "a \<in> set (net_list_aux [x]) \<longrightarrow> a \<in> set (net_list_aux [y,x])"
   by (induct y, simp_all)
-    
     
 lemma noDA[rule_format]:
   "noDenyAll xs \<longrightarrow> s \<in> set xs \<longrightarrow> \<not> member DenyAll s"
@@ -1240,7 +1161,6 @@ lemma disjComm: "disjSD_2 a b \<Longrightarrow> disjSD_2 b a"
   using tNDComm apply blast
   by (meson tNDComm twoNetsDistinct_def)
     
-    
 lemma disjSD2aux:
   "disjSD_2 a b \<Longrightarrow> \<not> member DenyAll a \<Longrightarrow> \<not> member DenyAll b \<Longrightarrow>
   disjSD_2 (DenyAllFromTo (first_srcNet a) (first_destNet a) \<oplus>
@@ -1250,10 +1170,8 @@ lemma disjSD2aux:
   apply (simp add: disjSD_2_def)
   using first_isIn by blast
     
-    
 lemma noDA1eq[rule_format]: "noDenyAll p \<longrightarrow> noDenyAll1 p"
   by (induct p, simp,rename_tac a p, case_tac a, simp_all)
-    
     
 lemma noDA1C[rule_format]: "noDenyAll1 (a#p) \<longrightarrow> noDenyAll1 p"
   by (case_tac a, simp_all,rule impI, rule noDA1eq, simp)+
@@ -1267,10 +1185,8 @@ lemma disjSD_2IDa:
    disjSD_2 (DenyAllFromTo a b \<oplus> DenyAllFromTo b a \<oplus> x) y"
   by(simp add:disjSD2aux)
     
-    
 lemma noDAID[rule_format]: "noDenyAll p \<longrightarrow> noDenyAll (insertDenies p)"
   by (induct p, simp_all,case_tac a, simp_all)
-    
     
 lemma isInIDo[rule_format]:  
   "noDenyAll p  \<longrightarrow> s \<in> set (insertDenies p) \<longrightarrow> 
@@ -1286,7 +1202,6 @@ lemma id_aux1[rule_format]: "DenyAllFromTo (first_srcNet s) (first_destNet s) \<
     \<longrightarrow> s \<in> set p"
   by (induct p, simp_all, rename_tac a p, case_tac a, simp_all)
     
-    
 lemma id_aux2:
   "noDenyAll p \<Longrightarrow>
    \<forall>s. s \<in> set p \<longrightarrow> disjSD_2 a s \<Longrightarrow>
@@ -1297,8 +1212,6 @@ lemma id_aux2:
    DenyAllFromTo (first_destNet s) (first_srcNet s) \<oplus> s)"
   by (metis disjComm disjSD2aux isInIDo noDA)
     
-    
-    
 lemma id_aux4[rule_format]: 
   "noDenyAll p \<Longrightarrow> \<forall>s. s \<in> set p \<longrightarrow> disjSD_2 a s \<Longrightarrow> 
    s \<in> set (insertDenies p) \<Longrightarrow> \<not> member DenyAll a \<Longrightarrow> 
@@ -1307,12 +1220,8 @@ lemma id_aux4[rule_format]:
           DenyAllFromTo (first_srcNet a) (first_destNet a) \<oplus>
           DenyAllFromTo (first_destNet a) (first_srcNet a) \<oplus> a \<and>
           a \<in> set p")
-  apply (drule_tac Q = "disjSD_2 a s" in exE, simp_all, rule id_aux2, simp_all)
+   apply (drule_tac Q = "disjSD_2 a s" in exE, simp_all, rule id_aux2, simp_all)
   using isInIDo by blast
-    
-    
-    (* XXX *)
-    
     
 lemma sepNetsID[rule_format]: 
   "noDenyAll1 p \<longrightarrow> separated p \<longrightarrow> separated (insertDenies p)"
@@ -1320,14 +1229,13 @@ lemma sepNetsID[rule_format]:
   apply (rename_tac a p, auto)
   using noDA1C apply blast
   apply (case_tac "a = DenyAll", auto)
-  apply (simp add: disjSD_2_def)
+   apply (simp add: disjSD_2_def)
   apply (case_tac a,auto)
-  apply (rule disjSD_2IDa, simp_all, rule id_aux4, simp_all, metis noDA noDAID)+
+    apply (rule disjSD_2IDa, simp_all, rule id_aux4, simp_all, metis noDA noDAID)+
   done
     
 lemma aNDDA[rule_format]: "allNetsDistinct p \<longrightarrow> allNetsDistinct(DenyAll#p)"
   by (case_tac p,auto simp: allNetsDistinct_def)
-    
     
 lemma OTNConc[rule_format]: "OnlyTwoNets (y # z) \<longrightarrow>  OnlyTwoNets z"
   by (case_tac y, simp_all)
@@ -1352,8 +1260,7 @@ lemma setPair4: "{a,b} = {c,d} \<Longrightarrow> a \<noteq> c \<Longrightarrow> 
     
 lemma otnaux1: " {x, y, x, y} = {x,y}"
   by auto
-    
-    
+        
 lemma OTNIDaux4: "{x,y,x} = {y,x}"
   by auto
     
@@ -1367,110 +1274,105 @@ lemma otnaux: "
   apply (simp add: onlyTwoNets_def)
   apply (subgoal_tac "{first_srcNet x, first_destNet x} =
                      {first_srcNet y, first_destNet y}")
-  apply (case_tac "(\<exists>a b. sdnets y = {(a, b)})")
-  apply simp_all
-  apply (case_tac "(\<exists>a b. sdnets x = {(a, b)})")
-  apply simp_all
-  apply (subgoal_tac "sdnets x = {(first_srcNet x, first_destNet x)}")
-  apply (subgoal_tac "sdnets y = {(first_srcNet y, first_destNet y)}")
-  apply simp
-  apply (case_tac "first_srcNet x = first_srcNet y")
-  apply simp_all
-  apply (rule disjI1)
-  apply (rule setPair)
-  apply simp
-  apply (subgoal_tac "first_srcNet x = first_destNet y")
-  apply simp
-  apply (subgoal_tac "first_destNet x = first_srcNet y")
-  apply simp
-  apply (rule_tac x ="first_srcNet y" in exI,
-      rule_tac x = "first_destNet y" in exI,simp)
-  apply (rule setPair1)
-  apply simp
-  apply (rule setPair4)
-  apply simp_all
-  apply (metis first_isIn singletonE)
-  apply (metis first_isIn singletonE)
-  apply (subgoal_tac "sdnets x = {(first_srcNet x, first_destNet x),
-                                (first_destNet x, first_srcNet x)}")
-  apply (subgoal_tac "sdnets y = {(first_srcNet y, first_destNet y)}")
-  apply simp
-  apply (case_tac "first_srcNet x = first_srcNet y")
-  apply simp_all
-  apply (subgoal_tac "first_destNet x = first_destNet y")
-  apply simp
-  apply (rule setPair)
-  apply simp
-  apply (subgoal_tac "first_srcNet x = first_destNet y")
-  apply simp
-  apply (subgoal_tac "first_destNet x = first_srcNet y")
-  apply simp
-  apply (rule_tac x ="first_srcNet y" in exI,
-      rule_tac x = "first_destNet y" in exI)
-  apply (metis OTNIDaux4 insert_commute )
-  apply (rule setPair1)
-  apply simp
-  apply (rule setPair5)
-  apply assumption
-  apply simp
-  apply (metis first_isIn singletonE)
-  apply (rule sdnets2)
-  apply simp_all
-  apply (case_tac "(\<exists>a b. sdnets x = {(a, b)})")
-  apply simp_all
-  apply (subgoal_tac "sdnets x = {(first_srcNet x, first_destNet x)}")
-  apply (subgoal_tac "sdnets y = {(first_srcNet y, first_destNet y),
+   apply (case_tac "(\<exists>a b. sdnets y = {(a, b)})")
+    apply simp_all
+    apply (case_tac "(\<exists>a b. sdnets x = {(a, b)})")
+     apply simp_all
+     apply (subgoal_tac "sdnets x = {(first_srcNet x, first_destNet x)}")
+      apply (subgoal_tac "sdnets y = {(first_srcNet y, first_destNet y)}")
+       apply simp
+       apply (case_tac "first_srcNet x = first_srcNet y")
+        apply simp_all
+        apply (rule disjI1)
+        apply (rule setPair)
+        apply simp
+       apply (subgoal_tac "first_srcNet x = first_destNet y")
+        apply simp
+        apply (subgoal_tac "first_destNet x = first_srcNet y")
+         apply simp
+         apply (rule_tac x ="first_srcNet y" in exI, rule_tac x = "first_destNet y" in exI,simp)
+        apply (rule setPair1)
+        apply simp
+       apply (rule setPair4)
+        apply simp_all
+      apply (metis first_isIn singletonE)
+     apply (metis first_isIn singletonE)
+    apply (subgoal_tac "sdnets x = {(first_srcNet x, first_destNet x),
+                                    (first_destNet x, first_srcNet x)}")
+     apply (subgoal_tac "sdnets y = {(first_srcNet y, first_destNet y)}")
+      apply simp
+      apply (case_tac "first_srcNet x = first_srcNet y")
+       apply simp_all
+       apply (subgoal_tac "first_destNet x = first_destNet y")
+        apply simp
+       apply (rule setPair)
+       apply simp
+      apply (subgoal_tac "first_srcNet x = first_destNet y")
+       apply simp
+       apply (subgoal_tac "first_destNet x = first_srcNet y")
+        apply simp
+        apply (rule_tac x ="first_srcNet y" in exI, rule_tac x = "first_destNet y" in exI)
+        apply (metis OTNIDaux4 insert_commute )
+       apply (rule setPair1)
+       apply simp
+      apply (rule setPair5)
+       apply assumption
+      apply simp
+     apply (metis first_isIn singletonE)
+    apply (rule sdnets2)
+     apply simp_all
+   apply (case_tac "(\<exists>a b. sdnets x = {(a, b)})")
+    apply simp_all
+    apply (subgoal_tac "sdnets x = {(first_srcNet x, first_destNet x)}")
+     apply (subgoal_tac "sdnets y = {(first_srcNet y, first_destNet y),
                                  (first_destNet y, first_srcNet y)}")
-  apply simp
-  apply (case_tac "first_srcNet x = first_srcNet y")
-  apply simp_all
-  apply (subgoal_tac "first_destNet x = first_destNet y")
-  apply simp
-  apply (rule_tac x ="first_srcNet y" in exI,
-      rule_tac x = "first_destNet y" in exI)
-  apply (metis OTNIDaux4 insert_commute )
-  apply (rule setPair)
-  apply simp
-  apply (subgoal_tac "first_srcNet x = first_destNet y")
-  apply simp
-  apply (subgoal_tac "first_destNet x = first_srcNet y")
-  apply simp
-  apply (rule setPair1)
-  apply simp
-  apply (rule setPair4)
-  apply assumption
-  apply simp
-  apply (rule sdnets2)
-  apply simp
-  apply simp
-  apply (metis singletonE first_isIn)
-  apply (subgoal_tac "sdnets x = {(first_srcNet x, first_destNet x),
+      apply simp
+      apply (case_tac "first_srcNet x = first_srcNet y")
+       apply simp_all
+       apply (subgoal_tac "first_destNet x = first_destNet y")
+        apply simp
+        apply (rule_tac x ="first_srcNet y" in exI, rule_tac x = "first_destNet y" in exI)
+        apply (metis OTNIDaux4 insert_commute )
+       apply (rule setPair)
+       apply simp
+      apply (subgoal_tac "first_srcNet x = first_destNet y")
+       apply simp
+       apply (subgoal_tac "first_destNet x = first_srcNet y")
+        apply simp
+       apply (rule setPair1)
+       apply simp
+      apply (rule setPair4)
+       apply assumption
+      apply simp
+     apply (rule sdnets2)
+      apply simp
+     apply simp
+    apply (metis singletonE first_isIn)
+   apply (subgoal_tac "sdnets x = {(first_srcNet x, first_destNet x),
                                  (first_destNet x, first_srcNet x)}")
-  apply (subgoal_tac "sdnets y = {(first_srcNet y, first_destNet y),
+    apply (subgoal_tac "sdnets y = {(first_srcNet y, first_destNet y),
                                 (first_destNet y, first_srcNet y)}")
-  apply simp
-  apply (case_tac "first_srcNet x = first_srcNet y")
-  apply simp_all
-  apply (subgoal_tac "first_destNet x = first_destNet y")
-  apply simp
-  apply (rule_tac x ="first_srcNet y" in exI,
-      rule_tac x = "first_destNet y" in exI)
-  apply (rule otnaux1)
-  apply (rule setPair)
-  apply simp
-  apply (subgoal_tac "first_srcNet x = first_destNet y")
-  apply simp
-  apply (subgoal_tac "first_destNet x = first_srcNet y")
-  apply simp
-  apply (rule_tac x ="first_srcNet y" in exI,
-      rule_tac x = "first_destNet y" in exI)
-  apply (metis OTNIDaux4 insert_commute)
-  apply (rule setPair1)
-  apply simp
-  apply (rule setPair4)
-  apply assumption
-  apply simp
-  apply (rule sdnets2,simp_all)+
+     apply simp
+     apply (case_tac "first_srcNet x = first_srcNet y")
+      apply simp_all
+      apply (subgoal_tac "first_destNet x = first_destNet y")
+       apply simp
+       apply (rule_tac x ="first_srcNet y" in exI, rule_tac x = "first_destNet y" in exI)
+       apply (rule otnaux1)
+      apply (rule setPair)
+      apply simp
+     apply (subgoal_tac "first_srcNet x = first_destNet y")
+      apply simp
+      apply (subgoal_tac "first_destNet x = first_srcNet y")
+       apply simp
+       apply (rule_tac x ="first_srcNet y" in exI, rule_tac x = "first_destNet y" in exI)
+       apply (metis OTNIDaux4 insert_commute)
+      apply (rule setPair1)
+      apply simp
+     apply (rule setPair4)
+      apply assumption
+     apply simp
+    apply (rule sdnets2,simp_all)+
   apply (rule bNaux, simp_all)
   done
     
@@ -1480,13 +1382,13 @@ lemma OTNSepaux:
     noDenyAll z \<Longrightarrow> onlyTwoNets a \<Longrightarrow> OnlyTwoNets (y # z) \<Longrightarrow> first_bothNet a = first_bothNet y \<Longrightarrow> 
     OnlyTwoNets (separate (a \<oplus> y # z))"
   apply (drule mp)
-  apply simp_all
+   apply simp_all
   apply (rule conjI)
-  apply (rule otnaux)
-  apply simp_all
-  apply (rule_tac p = "(y # z)" in OTNoTN)
-  apply simp_all
-  apply (metis member.simps(2))
+   apply (rule otnaux)
+       apply simp_all
+   apply (rule_tac p = "(y # z)" in OTNoTN)
+     apply simp_all
+   apply (metis member.simps(2))
   apply (simp add: onlyTwoNets_def)
   apply (rule_tac y = y in OTNConc,simp)
   done
@@ -1499,12 +1401,11 @@ lemma OTNSEp[rule_format]:
 lemma nda[rule_format]: 
   "singleCombinators (a#p) \<longrightarrow> noDenyAll p \<longrightarrow> noDenyAll1 (a # p)"
   apply (induct p,simp_all)
-  apply (case_tac a, simp_all)+
+   apply (case_tac a, simp_all)+
   done
     
 lemma nDAcharn[rule_format]: "noDenyAll p = (\<forall> r \<in> set p. \<not> member DenyAll r)"
-  by (induct p) simp_all
-    
+  by (induct p, simp_all)
     
 lemma nDAeqSet: "set p = set s \<Longrightarrow> noDenyAll p = noDenyAll s"
   by (simp add: nDAcharn)
@@ -1520,39 +1421,31 @@ lemma nDASC[rule_format]:
   apply (induct p, simp_all)
   using nDASCaux nDAcharn nda singleCombinatorsConc by blast
     
-    
 lemma noDAAll[rule_format]: "noDenyAll p = (\<not> memberP DenyAll p)"
   by (induct p) simp_all
-    
     
 lemma memberPsep[symmetric]: "memberP x p = memberP x (separate p)"
   by (induct p rule: separate.induct)  simp_all
     
-    
 lemma noDAsep[rule_format]: "noDenyAll p \<Longrightarrow> noDenyAll (separate p)"
   by (simp add:noDAAll,subst memberPsep, simp)
     
-    
 lemma noDA1sep[rule_format]: "noDenyAll1 p \<longrightarrow> noDenyAll1 (separate p)"
   by (induct p rule:separate.induct, simp_all add: noDAsep)
-    
     
 lemma isInAlternativeLista: 
   "(aa \<in> set (net_list_aux [a]))\<Longrightarrow>  aa \<in> set (net_list_aux (a # p))"
   by (case_tac a,auto)
     
-    
 lemma isInAlternativeListb: 
   "(aa \<in> set (net_list_aux p))\<Longrightarrow>  aa \<in> set (net_list_aux (a # p))"
   by (case_tac a,simp_all)
-    
     
 lemma ANDSepaux: "allNetsDistinct (x # y # z) \<Longrightarrow> allNetsDistinct (x \<oplus> y # z)"
   apply (simp add: allNetsDistinct_def)
   apply (intro allI impI, rename_tac a b)
   apply (drule_tac x = a in spec, drule_tac x = b in spec)
   by (meson isInAlternativeList)
-    
     
 lemma netlistalternativeSeparateaux:
   "net_list_aux [y] @ net_list_aux z = net_list_aux (y # z)"
@@ -1561,19 +1454,16 @@ lemma netlistalternativeSeparateaux:
 lemma netlistalternativeSeparate: "net_list_aux p = net_list_aux (separate p)"
   by (induct p rule:separate.induct, simp_all) (simp_all add: netlistalternativeSeparateaux)
     
-    
 lemma  ANDSepaux2: 
   "allNetsDistinct(x#y#z) \<Longrightarrow> allNetsDistinct(separate(y#z)) \<Longrightarrow> allNetsDistinct(x#separate(y#z))"
   apply (simp add: allNetsDistinct_def)
   by (metis isInAlternativeList netlistalternativeSeparate netlistaux)
     
-    
-    
 lemma ANDSep[rule_format]: "allNetsDistinct p \<longrightarrow> allNetsDistinct(separate p)"
   apply (induct p rule: separate.induct, simp_all) 
-  apply (metis ANDConc aNDDA)
-  apply (metis ANDConc ANDSepaux ANDSepaux2)
-  apply (metis ANDConc ANDSepaux ANDSepaux2)
+     apply (metis ANDConc aNDDA)
+    apply (metis ANDConc ANDSepaux ANDSepaux2)
+   apply (metis ANDConc ANDSepaux ANDSepaux2)
   apply (metis ANDConc ANDSepaux ANDSepaux2)
   done
     
@@ -1595,14 +1485,13 @@ proof -
         list.simps(15) nDAeqSet noDA1eq)
 qed
   
-  
 lemma OTNSC[rule_format]: "singleCombinators p \<longrightarrow> OnlyTwoNets p"
   apply (induct p,simp_all)
   apply (rename_tac a p)
   apply (rule impI,drule mp)
-  apply (erule singleCombinatorsConc)
+   apply (erule singleCombinatorsConc)
   apply (case_tac a, simp_all)
-  apply (simp add: onlyTwoNets_def)+
+   apply (simp add: onlyTwoNets_def)+
   done
     
 lemma fMTaux: "\<not> member DenyAll x \<Longrightarrow> first_bothNet x \<noteq> {}"
@@ -1615,11 +1504,9 @@ lemma fl2[rule_format]: "firstList (separate p) = firstList p"
 lemma fl3[rule_format]: "NetsCollected p \<longrightarrow> (first_bothNet x \<noteq> firstList p \<longrightarrow>
           (\<forall>a\<in>set p. first_bothNet x \<noteq> first_bothNet a))\<longrightarrow> NetsCollected (x#p)"
   by (induct p) simp_all
-    
-    
+        
 lemma sortedConc[rule_format]: " sorted (a # p) l \<longrightarrow>  sorted p l"
   by (induct p) simp_all
-    
     
 lemma smalleraux2: 
   "{a,b} \<in> set l \<Longrightarrow> {c,d} \<in> set l \<Longrightarrow> {a,b} \<noteq> {c,d} \<Longrightarrow> 
@@ -1627,13 +1514,11 @@ lemma smalleraux2:
   \<not> smaller (DenyAllFromTo c d) (DenyAllFromTo a b) l"
   by (metis bothNet.simps(2) pos_noteq smaller.simps(5))
     
-    
 lemma smalleraux2a: 
   "{a,b} \<in> set l \<Longrightarrow> {c,d} \<in> set l \<Longrightarrow> {a,b} \<noteq> {c,d} \<Longrightarrow> 
    smaller (DenyAllFromTo a b) (AllowPortFromTo c d p) l \<Longrightarrow> 
   \<not> smaller (AllowPortFromTo c d p) (DenyAllFromTo a b) l"
   by (simp) (metis eq_imp_le pos_noteq)
-    
     
 lemma smalleraux2b: 
   "{a,b} \<in> set l \<Longrightarrow> {c,d} \<in> set l \<Longrightarrow> {a,b} \<noteq> {c,d} \<Longrightarrow> y = DenyAllFromTo a b \<Longrightarrow>
@@ -1641,10 +1526,9 @@ lemma smalleraux2b:
   \<not> smaller y (AllowPortFromTo  c d p) l"
   by (simp) (metis eq_imp_le pos_noteq)
     
-    
 lemma smalleraux2c: 
   "{a,b} \<in> set l\<Longrightarrow>{c,d}\<in>set l\<Longrightarrow>{a,b} \<noteq> {c,d} \<Longrightarrow> y = AllowPortFromTo a b q \<Longrightarrow> 
-smaller (AllowPortFromTo  c d p) y l \<Longrightarrow> \<not> smaller y (AllowPortFromTo  c d p) l"
+    smaller (AllowPortFromTo  c d p) y l \<Longrightarrow> \<not> smaller y (AllowPortFromTo  c d p) l"
   by (simp) (metis pos_noteq)
     
 lemma smalleraux3: 
@@ -1684,24 +1568,21 @@ next
   case (Conc c d) thus ?thesis using assms by simp
 qed
   
-thm Combinators.split
-  
 lemma smalleraux3a: 
   "a \<noteq> DenyAll \<Longrightarrow> b \<noteq> DenyAll \<Longrightarrow> in_list b l \<Longrightarrow> in_list a l \<Longrightarrow>  
    bothNet a \<noteq> bothNet b \<Longrightarrow> smaller a b l \<Longrightarrow> singleCombinators [a] \<Longrightarrow>
     singleCombinators [b] \<Longrightarrow> \<not> smaller b a l"
   apply (rule smalleraux3,simp_all)
-  apply (case_tac a, simp_all)
+   apply (case_tac a, simp_all)
   apply (case_tac b, simp_all)
   done
     
 lemma posaux[rule_format]: "position a l < position b l \<longrightarrow> a \<noteq> b"
-  by (induct l) simp_all
+  by (induct l, simp_all)
     
 lemma posaux6[rule_format]: 
   "a \<in> set l \<longrightarrow> b \<in> set l \<longrightarrow> a \<noteq> b \<longrightarrow> position a l \<noteq>  position b l"
   by (induct l) (simp_all add: position_positive)
-    
     
 lemma notSmallerTransaux[rule_format]: 
   "x \<noteq> DenyAll \<Longrightarrow> r \<noteq> DenyAll \<Longrightarrow>
@@ -1710,22 +1591,21 @@ lemma notSmallerTransaux[rule_format]:
    in_list x l \<Longrightarrow> in_list y l \<Longrightarrow> in_list r l \<Longrightarrow> \<not> smaller r x l"
   by (metis order_trans)
     
-    
 lemma notSmallerTrans[rule_format]: 
   "x \<noteq> DenyAll \<longrightarrow> r \<noteq> DenyAll \<longrightarrow> singleCombinators (x#y#z) \<longrightarrow> 
   \<not> smaller y x l \<longrightarrow> sorted (x#y#z) l \<longrightarrow> r \<in> set z \<longrightarrow> 
   all_in_list (x#y#z) l \<longrightarrow> \<not> smaller r x l"
   apply (rule impI)+
   apply (rule notSmallerTransaux, simp_all)
-  apply (metis singleCombinatorsConc singleCombinatorsStart)
-  apply (metis SCSubset equalityE remdups.simps(2) set_remdups
-      singleCombinatorsConc singleCombinatorsStart)
-  apply metis
-  apply (metis sorted.simps(3) in_set_in_list singleCombinatorsConc
-      singleCombinatorsStart sortedConcStart sorted_is_smaller)
-  apply (metis sorted_Cons all_in_list.simps(2)
-      singleCombinatorsConc)
-  apply (metis,metis in_set_in_list)
+        apply (metis singleCombinatorsConc singleCombinatorsStart)
+       apply (metis SCSubset equalityE remdups.simps(2) set_remdups
+                    singleCombinatorsConc singleCombinatorsStart)
+      apply metis
+     apply (metis sorted.simps(3) in_set_in_list singleCombinatorsConc
+                  singleCombinatorsStart sortedConcStart sorted_is_smaller)
+    apply (metis sorted_Cons all_in_list.simps(2)
+                 singleCombinatorsConc)
+   apply (metis,metis in_set_in_list)
   done
     
 lemma  NCSaux1[rule_format]:
@@ -1738,7 +1618,7 @@ next
   case (Cons a list) 
   then show ?thesis apply simp
     apply (intro impI conjI)
-    apply (metis bothNet.simps(2) first_bothNet.simps(3))
+     apply (metis bothNet.simps(2) first_bothNet.simps(3))
   proof -
     assume 1: "{x, y} \<in> set l" and 2: "in_list a l \<and> all_in_list list l"
       and 3 : "singleCombinators (a # list)"
@@ -1756,7 +1636,7 @@ next
           rule_tac y = "a" and z = "list"  in  notSmallerTrans, 
           simp_all del: smaller.simps)
       apply (rule smalleraux3a,simp_all del: smaller.simps)
-      apply (case_tac a, simp_all del: smaller.simps)
+       apply (case_tac a, simp_all del: smaller.simps)
       by (metis aux0_0 first_bothNet.elims list.set_intros(1))
     show " {x, y} \<noteq> first_bothNet a \<Longrightarrow>  {x, y} \<noteq> {u, v}"
       using  3  "*" "**" by force
@@ -1800,9 +1680,6 @@ next
   case (Conc c d) thus ?thesis by simp
 qed
   
-  
-  (* a terrible proof, but I didn't get it better; 
-   complex context dependencies into huge case-distinction cascades. bu *)
 lemma  NCSaux2[rule_format]:
   "noDenyAll p \<longrightarrow> {a, b} \<in> set l \<longrightarrow> all_in_list p l \<longrightarrow>singleCombinators p \<longrightarrow>
    sorted (DenyAllFromTo a b # p) l \<longrightarrow> {a, b} \<noteq> firstList p \<longrightarrow>
@@ -1822,44 +1699,42 @@ next
                     in_list aa l \<Longrightarrow>   all_in_list list l \<Longrightarrow> 
                     in_list (AllowPortFromTo u v w) l"
     apply (rule_tac p = list in in_set_in_list)
-    apply simp_all
+     apply simp_all
     done
   assume  "p = aa # list" 
   then show ?thesis 
     apply simp
     apply (intro impI conjI,hypsubst, simp)
     apply (subgoal_tac "smaller (DenyAllFromTo a b) (AllowPortFromTo u v w) l")
-    apply (subgoal_tac "\<not> smaller (AllowPortFromTo u v w) (DenyAllFromTo a b) l")
-    apply (rule_tac l = l in posaux) 
-    apply (rule_tac y = "position (first_bothNet aa) l" in basic_trans_rules(22))
-    apply (simp_all split: if_splits)
-    apply (case_tac aa, simp_all)
-    apply (case_tac "a = x21 \<and> b = x22", simp_all)
-    apply (case_tac "a = x21", simp_all)
-    apply (simp add: order.not_eq_order_implies_strict posaux6)
-    apply (simp add: order.not_eq_order_implies_strict posaux6)
-    apply (simp add: order.not_eq_order_implies_strict posaux6)  
-    apply (rule basic_trans_rules(18))
-    apply (rule_tac a = "DenyAllFromTo a b" and b = aa in posaux4, simp_all)
-    apply (case_tac aa,simp_all)
-    apply (case_tac aa, simp_all)
-    apply (rule posaux3, simp_all)
-    apply (case_tac aa, simp_all)
-    apply (rule_tac a = aa and b = "AllowPortFromTo u v w" in posaux4, simp_all)
-    apply (case_tac aa,simp_all)
-    apply (rule_tac p = list in sorted_is_smaller, simp_all)
-    apply (case_tac aa, simp_all)
-    apply (case_tac aa, simp_all)
-    apply (rule_tac a = aa and b = "AllowPortFromTo u v w" in posaux4, simp_all)
-    apply (case_tac aa,simp_all)
+     apply (subgoal_tac "\<not> smaller (AllowPortFromTo u v w) (DenyAllFromTo a b) l")
+      apply (rule_tac l = l in posaux) 
+      apply (rule_tac y = "position (first_bothNet aa) l" in basic_trans_rules(22))
+       apply (simp_all split: if_splits)
+         apply (case_tac aa, simp_all)
+          apply (case_tac "a = x21 \<and> b = x22", simp_all)
+          apply (case_tac "a = x21", simp_all)
+           apply (simp add: order.not_eq_order_implies_strict posaux6)
+          apply (simp add: order.not_eq_order_implies_strict posaux6)
+         apply (simp add: order.not_eq_order_implies_strict posaux6)  
+        apply (rule basic_trans_rules(18))
+         apply (rule_tac a = "DenyAllFromTo a b" and b = aa in posaux4, simp_all)
+          apply (case_tac aa,simp_all)
+         apply (case_tac aa, simp_all)
+        apply (rule posaux3, simp_all)
+        apply (case_tac aa, simp_all)
+       apply (rule_tac a = aa and b = "AllowPortFromTo u v w" in posaux4, simp_all)
+         apply (case_tac aa,simp_all)
+        apply (rule_tac p = list in sorted_is_smaller, simp_all)
+        apply (case_tac aa, simp_all)
+       apply (case_tac aa, simp_all)
+      apply (rule_tac a = aa and b = "AllowPortFromTo u v w" in posaux4, simp_all)
+         apply (case_tac aa,simp_all)
     using ** apply auto[1]       
-    apply (metis all_in_list.simps(2) sorted_Cons)
-    apply (case_tac aa, simp_all)
-    apply (metis ** bothNet.simps(3) in_list.simps(3) posaux6)
+       apply (metis all_in_list.simps(2) sorted_Cons)
+      apply (case_tac aa, simp_all)
+     apply (metis ** bothNet.simps(3) in_list.simps(3) posaux6)
     using * by force  
 qed
-  
-  
   
 lemma  NCSaux3[rule_format]:
   "noDenyAll p \<longrightarrow> {a, b} \<in> set l \<longrightarrow>  all_in_list p l \<longrightarrow>singleCombinators p \<longrightarrow> 
@@ -1874,23 +1749,22 @@ proof -
     and  6 : "{a, b} \<noteq> first_bothNet aa" and 7: "DenyAllFromTo u v \<in> set list"
   have *: "\<not> smaller (DenyAllFromTo u v) (AllowPortFromTo a b w) l"
     apply (insert 1 2 3 4 5 6 7, rule_tac y = aa and z = list in notSmallerTrans)
-    apply (simp_all del: smaller.simps)
+          apply (simp_all del: smaller.simps)
     apply (rule smalleraux3a,simp_all del: smaller.simps)
-    apply (case_tac aa, simp_all del: smaller.simps)
+     apply (case_tac aa, simp_all del: smaller.simps)
     apply (case_tac aa, simp_all del: smaller.simps)
     done
   have **: "smaller (AllowPortFromTo a b w) (DenyAllFromTo u v) l"        
     apply (insert 1 2 3 4 5 6 7,rule_tac y = aa in order_trans,simp_all del: smaller.simps)
-    apply (subgoal_tac "in_list (DenyAllFromTo u v) l", simp)
-    apply (rule_tac p = list in in_set_in_list, simp_all)
+     apply (subgoal_tac "in_list (DenyAllFromTo u v) l", simp)
+     apply (rule_tac p = list in in_set_in_list, simp_all)
     apply (rule_tac p = list in sorted_is_smaller,simp_all del: smaller.simps)
-    apply (subgoal_tac "in_list (DenyAllFromTo u v) l", simp)
+     apply (subgoal_tac "in_list (DenyAllFromTo u v) l", simp)
     apply (rule_tac p = list in in_set_in_list, simp_all)
     apply (erule singleCombinatorsConc)
     done
   show       "{a, b} \<noteq> {u, v}" by (insert * **, simp split: if_splits)
 qed
-  
   
 lemma  NCSaux4[rule_format]:
   "noDenyAll p \<longrightarrow> {a, b} \<in> set l \<longrightarrow>  all_in_list p l \<longrightarrow> singleCombinators p \<longrightarrow> 
@@ -1898,7 +1772,7 @@ lemma  NCSaux4[rule_format]:
  AllowPortFromTo u v w \<in> set p \<longrightarrow> {a, b} \<noteq> {u, v}"
   apply (cases p, simp_all)
   apply (intro impI conjI)
-  apply (hypsubst,simp_all)
+   apply (hypsubst,simp_all)
 proof -
   fix aa::"('a, 'b) Combinators" fix list::"('a, 'b) Combinators list"
   assume 1 : "\<not> member DenyAll aa \<and> noDenyAll list" and 2: "{a, b} \<in> set l "
@@ -1907,34 +1781,33 @@ proof -
     and  6 : "{a, b} \<noteq> first_bothNet aa" and 7: "AllowPortFromTo u v w \<in> set list"
   have *: "\<not> smaller (AllowPortFromTo u v w) (AllowPortFromTo a b c) l"
     apply (insert 1 2 3 4 5 6 7, rule_tac y = aa and z = list in notSmallerTrans)
-    apply (simp_all del: smaller.simps)
+          apply (simp_all del: smaller.simps)
     apply (rule smalleraux3a,simp_all del: smaller.simps)
-    apply (case_tac aa, simp_all del: smaller.simps)
+     apply (case_tac aa, simp_all del: smaller.simps)
     apply (case_tac aa, simp_all del: smaller.simps)
     done
   have **: "smaller (AllowPortFromTo a b c) (AllowPortFromTo u v w) l"        
     apply(insert 1 2 3 4 5 6 7)
     apply (case_tac aa, simp_all del: smaller.simps)
+     apply (rule_tac y = aa in order_trans,simp_all del: smaller.simps)
+      apply (subgoal_tac "in_list (AllowPortFromTo u v w) l", simp)
+      apply (rule_tac p = list in in_set_in_list, simp)
+      apply (case_tac aa, simp_all del: smaller.simps)
+     apply (rule_tac p = list in sorted_is_smaller,simp_all del: smaller.simps)
+     apply (subgoal_tac "in_list (AllowPortFromTo u v w) l", simp)
+     apply (rule_tac p = list in in_set_in_list, simp, simp)
     apply (rule_tac y = aa in order_trans,simp_all del: smaller.simps)
-    apply (subgoal_tac "in_list (AllowPortFromTo u v w) l", simp)
-    apply (rule_tac p = list in in_set_in_list, simp)
-    apply (case_tac aa, simp_all del: smaller.simps)
-    apply (rule_tac p = list in sorted_is_smaller,simp_all del: smaller.simps)
-    apply (subgoal_tac "in_list (AllowPortFromTo u v w) l", simp)
-    apply (rule_tac p = list in in_set_in_list, simp, simp)
-    apply (rule_tac y = aa in order_trans,simp_all del: smaller.simps)
-    apply (subgoal_tac "in_list (AllowPortFromTo u v w) l", simp)
+     apply (subgoal_tac "in_list (AllowPortFromTo u v w) l", simp)
     using in_set_in_list apply blast
     by (metis all_in_list.simps(2) bothNet.simps(3) in_list.simps(3) 
         singleCombinators.simps(5) sorted_ConsA)
   show       "{a, b} \<noteq> {u, v}"  by (insert * **, simp_all split: if_splits)
 qed
-  
-  
+
 lemma NetsCollectedSorted[rule_format]: 
   "noDenyAll1 p \<longrightarrow> all_in_list p l \<longrightarrow> singleCombinators p \<longrightarrow> sorted p l \<longrightarrow>  NetsCollected p"
   apply (induct p)
-  apply simp
+   apply simp
   apply (intro impI,drule mp,erule noDA1C,drule mp,simp)
   apply (drule mp,erule singleCombinatorsConc)
   apply (drule mp,erule sortedConc) 
@@ -1944,7 +1817,7 @@ proof -
     and  3: "singleCombinators (a # p)" and 4: "sorted (a # p) l"  and   5: "NetsCollected p"
   show "NetsCollected (a # p)"
     apply(insert 1 2 3 4 5, rule fl3)
-    apply(simp, rename_tac "aa")
+     apply(simp, rename_tac "aa")
   proof (cases a)
     case DenyAll
     fix aa::"('a, 'b) Combinators" 
@@ -1959,8 +1832,8 @@ proof -
     show "first_bothNet a \<noteq> first_bothNet aa"
       apply(insert 1 2 3 4 5 6 7 `a = DenyAllFromTo x21 x22`)
       apply(case_tac aa, simp_all)
-      apply (meson NCSaux1)
-      apply (meson NCSaux2)
+        apply (meson NCSaux1)
+       apply (meson NCSaux2)
       using SCnotConc by auto[1]
   next
     case (AllowPortFromTo x31 x32 x33) 
@@ -1969,8 +1842,8 @@ proof -
     show "first_bothNet a \<noteq> first_bothNet aa"
       apply(insert 1 2 3 4 6 7 `a = AllowPortFromTo x31 x32 x33`)
       apply(case_tac aa, simp_all)
-      apply (meson NCSaux3)
-      apply (meson NCSaux4)
+        apply (meson NCSaux3)
+       apply (meson NCSaux4)
       using SCnotConc by auto
   next
     case (Conc x41 x42) 
@@ -1980,36 +1853,27 @@ proof -
   qed
 qed
   
-  
-  
 lemma NetsCollectedSort: "distinct p \<Longrightarrow>noDenyAll1 p \<Longrightarrow> all_in_list p l \<Longrightarrow>
                           singleCombinators p \<Longrightarrow> NetsCollected (sort p l)"
   apply (rule_tac l = l in NetsCollectedSorted,rule noDAsort, simp_all)
-  apply (rule_tac b=p in all_in_listSubset)
+   apply (rule_tac b=p in all_in_listSubset)
   by (auto intro: sort_is_sorted)
-    
-    
     
 lemma fBNsep[rule_format]: "(\<forall>a\<in>set z. {b,c} \<noteq> first_bothNet a) \<longrightarrow>
                            (\<forall>a\<in>set (separate z). {b,c} \<noteq> first_bothNet a)"
   apply (induct z rule: separate.induct, simp)
   by (rule impI, simp)+
     
-    
-    
 lemma fBNsep1[rule_format]: " (\<forall>a\<in>set z. first_bothNet x \<noteq> first_bothNet a) \<longrightarrow>
                         (\<forall>a\<in>set (separate z). first_bothNet x \<noteq> first_bothNet a)"
   apply (induct z rule: separate.induct, simp)
   by (rule impI, simp)+
-    
-    
     
 lemma NetsCollectedSepauxa:
   "{b,c}\<noteq>firstList z \<Longrightarrow>  noDenyAll1 z \<Longrightarrow> \<forall>a\<in>set z. {b,c}\<noteq>first_bothNet a \<Longrightarrow> NetsCollected z \<Longrightarrow>  
    NetsCollected (separate z) \<Longrightarrow> {b, c} \<noteq> firstList (separate z) \<Longrightarrow>   a \<in> set (separate z) \<Longrightarrow> 
    {b, c} \<noteq> first_bothNet a"
   by (rule fBNsep) simp_all
-    
     
 lemma NetsCollectedSepaux:
   "first_bothNet (x::('a,'b)Combinators) \<noteq> first_bothNet y \<Longrightarrow> \<not> member DenyAll y \<and> noDenyAll z \<Longrightarrow>  
@@ -2030,13 +1894,13 @@ next
   fix v va y fix z::"('a, 'b) Combinators list"
   case 2 then show ?case 
     apply (intro conjI impI, simp)
-    apply (metis NetsCollectedSepaux fl3 noDA1eq noDenyAll.simps(1))
+     apply (metis NetsCollectedSepaux fl3 noDA1eq noDenyAll.simps(1))
     by (metis noDA1eq noDenyAll.simps(1))
 next 
   fix v va vb y fix z::"('a, 'b) Combinators list"
   case 3 then show ?case 
     apply (intro conjI impI)
-    apply (metis NetsCollectedSepaux fl3 noDA1eq noDenyAll.simps(1))
+     apply (metis NetsCollectedSepaux fl3 noDA1eq noDenyAll.simps(1))
     by (metis noDA1eq noDenyAll.simps(1))
 next 
   fix v va y fix z::"('a, 'b) Combinators list"
@@ -2044,14 +1908,13 @@ next
     by (metis NetsCollectedSepaux fl3 noDA1eq noDenyAll.simps(1))
 qed
   
-  
 lemma OTNaux: 
   "onlyTwoNets a \<Longrightarrow> \<not> member DenyAll a \<Longrightarrow> (x,y) \<in> sdnets a \<Longrightarrow> 
    (x = first_srcNet a \<and> y = first_destNet a) \<or>   (x = first_destNet a \<and> y = first_srcNet a)"
   apply (case_tac "(x = first_srcNet a \<and> y = first_destNet a)",simp_all add: onlyTwoNets_def)
   apply (case_tac "(\<exists>aa b. sdnets a = {(aa, b)})", simp_all)
-  apply (subgoal_tac "sdnets a = {(first_srcNet a,first_destNet a)}", simp_all)
-  apply (metis singletonE first_isIn)
+   apply (subgoal_tac "sdnets a = {(first_srcNet a,first_destNet a)}", simp_all)
+   apply (metis singletonE first_isIn)
   apply (subgoal_tac"sdnets a = {(first_srcNet a,first_destNet a),(first_destNet a, first_srcNet a)}")
   by(auto intro!: sdnets2)
     
@@ -2060,7 +1923,7 @@ sdnets a = {(first_srcNet a,first_destNet a)} \<or>
 sdnets a = {(first_srcNet a, first_destNet a),(first_destNet a, first_srcNet a)}"
   apply (case_tac "sdnets a = {(first_srcNet a, first_destNet a)}", simp_all add: onlyTwoNets_def)
   apply (case_tac "(\<exists>aa b. sdnets a = {(aa, b)})", simp_all)
-  apply (metis singletonE first_isIn)
+   apply (metis singletonE first_isIn)
   apply (subgoal_tac "sdnets a = {(first_srcNet a,first_destNet a),(first_destNet a,first_srcNet a)}")
   by( auto intro!: sdnets2)
     
@@ -2077,9 +1940,7 @@ lemma sdnets_noteq:
   apply (insert first_bothNet_charn [of a])
   apply (insert first_bothNet_charn [of aa])
   by(metis OTNaux first_isIn insert_absorb2 insert_commute)
-    
-    
-    
+
 lemma fbn_noteq: 
   "onlyTwoNets a \<Longrightarrow>  onlyTwoNets aa \<Longrightarrow>  first_bothNet a \<noteq> first_bothNet aa \<Longrightarrow>
     \<not> member DenyAll a \<Longrightarrow>  \<not> member DenyAll aa \<Longrightarrow>  allNetsDistinct [a, aa] \<Longrightarrow>
@@ -2087,8 +1948,7 @@ lemma fbn_noteq:
     first_destNet a \<noteq> first_srcNet aa \<or> first_destNet a \<noteq> first_destNet aa" 
   apply (insert sdnets_charn [of a])
   apply (insert sdnets_charn [of aa])
-  by (metis first_bothNet_charn)
-    
+  by (metis first_bothNet_charn)    
     
 lemma NCisSD2aux: 
   assumes 1: "onlyTwoNets a" and 2 : "onlyTwoNets aa" and 3 : "first_bothNet a \<noteq> first_bothNet aa"
@@ -2117,36 +1977,35 @@ proof -
     show "netsDistinct ab c \<or> netsDistinct b d"         
       apply(insert       7 8 9 10 11 12)
       apply (cases "sdnets a = {(first_srcNet a, first_destNet a)}")
-      apply (cases "sdnets aa = {(first_srcNet aa, first_destNet aa)}", simp_all)
-      apply (metis 4 5 firstInNeta firstInNet alternativelistconc2)
+       apply (cases "sdnets aa = {(first_srcNet aa, first_destNet aa)}", simp_all)
+        apply (metis 4 5 firstInNeta firstInNet alternativelistconc2)
+       apply (case_tac "(c = first_srcNet aa \<and> d = first_destNet aa)", simp_all)
+        apply (case_tac "(first_srcNet a) \<noteq> (first_srcNet aa)",simp_all)
+         apply (metis 4 5 firstInNeta alternativelistconc2)
+        apply (subgoal_tac "first_destNet a \<noteq> first_destNet aa") 
+         apply (metis 4 5 firstInNet alternativelistconc2)
+        apply (metis 3 4 5 first_bothNetsd)
+       apply (case_tac "(first_destNet aa) \<noteq> (first_srcNet a)",simp_all)
+        apply (metis 4 5 firstInNeta firstInNet alternativelistconc2)
+       apply (case_tac "first_destNet aa \<noteq> first_destNet a",simp_all)
+        apply (subgoal_tac "first_srcNet aa \<noteq> first_destNet a")
+         apply (metis 4 5 firstInNeta firstInNet alternativelistconc2)
+        apply (metis 3 4 5 first_bothNetsd insert_commute)
+       apply (metis 5 firstInNeta firstInNet alternativelistconc2)
       apply (case_tac "(c = first_srcNet aa \<and> d = first_destNet aa)", simp_all)
-      apply (case_tac "(first_srcNet a) \<noteq> (first_srcNet aa)",simp_all)
-      apply (metis 4 5 firstInNeta alternativelistconc2)
-      apply (subgoal_tac "first_destNet a \<noteq> first_destNet aa") 
-      apply (metis 4 5 firstInNet alternativelistconc2)
-      apply (metis 3 4 5 first_bothNetsd)
-      apply (case_tac "(first_destNet aa) \<noteq> (first_srcNet a)",simp_all)
-      apply (metis 4 5 firstInNeta firstInNet alternativelistconc2)
-      apply (case_tac "first_destNet aa \<noteq> first_destNet a",simp_all)
-      apply (subgoal_tac "first_srcNet aa \<noteq> first_destNet a")
-      apply (metis 4 5 firstInNeta firstInNet alternativelistconc2)
-      apply (metis 3 4 5 first_bothNetsd insert_commute)
-      apply (metis 5 firstInNeta firstInNet alternativelistconc2)
-      apply (case_tac "(c = first_srcNet aa \<and> d = first_destNet aa)", simp_all)
-      apply (case_tac "(ab = first_srcNet a \<and> b = first_destNet a)", simp_all)
-      apply (case_tac "(first_srcNet a) \<noteq> (first_srcNet aa)",simp_all)
-      apply (metis 4 5 firstInNeta alternativelistconc2)
-      apply (subgoal_tac "first_destNet a \<noteq> first_destNet aa")
-      apply (metis  4 5 firstInNet alternativelistconc2)
-      apply (metis 3 4 5 first_bothNetsd )
-      apply (case_tac "(first_destNet aa) \<noteq> (first_srcNet a)",simp_all)
-      apply (metis 4 5 firstInNeta firstInNet alternativelistconc2)
-      apply (case_tac "first_destNet aa \<noteq> first_destNet a", simp)
-      apply (subgoal_tac "first_srcNet aa \<noteq> first_destNet a")
-      apply (metis 4 5 firstInNeta firstInNet alternativelistconc2)
-      apply (metis 3 4 5 first_bothNetsd insert_commute)
-      apply (metis)
-        
+       apply (case_tac "(ab = first_srcNet a \<and> b = first_destNet a)", simp_all)
+        apply (case_tac "(first_srcNet a) \<noteq> (first_srcNet aa)",simp_all)
+         apply (metis 4 5 firstInNeta alternativelistconc2)
+        apply (subgoal_tac "first_destNet a \<noteq> first_destNet aa")
+         apply (metis  4 5 firstInNet alternativelistconc2)
+        apply (metis 3 4 5 first_bothNetsd )
+       apply (case_tac "(first_destNet aa) \<noteq> (first_srcNet a)",simp_all)
+        apply (metis 4 5 firstInNeta firstInNet alternativelistconc2)
+       apply (case_tac "first_destNet aa \<noteq> first_destNet a", simp)
+        apply (subgoal_tac "first_srcNet aa \<noteq> first_destNet a")
+         apply (metis 4 5 firstInNeta firstInNet alternativelistconc2)
+        apply (metis 3 4 5 first_bothNetsd insert_commute)
+       apply (metis)        
     proof - 
       assume  14 : "(ab = first_srcNet a \<and> b = first_destNet a \<or> ab = first_destNet a \<and> b = first_srcNet a) \<and> (c, d) \<in> sdnets aa "
         and     15 : "sdnets a = {(first_srcNet a, first_destNet a), (first_destNet a, first_srcNet a)} "
@@ -2156,29 +2015,28 @@ proof -
         and     19 : "first_destNet a \<noteq> first_srcNet a"
         and     20 : "c = first_srcNet aa \<longrightarrow> d \<noteq> first_destNet aa" 
       show " netsDistinct ab c \<or> netsDistinct b d"
-        
         apply (case_tac "(ab = first_srcNet a \<and> b = first_destNet a)",simp_all)
+         apply (case_tac "c = first_srcNet aa", simp_all)
+          apply (metis 2 5 14 20 OTNaux)
+         apply (subgoal_tac "c = first_destNet aa", simp)
+          apply (subgoal_tac "d = first_srcNet aa", simp)
+           apply (case_tac "(first_srcNet a) \<noteq> (first_destNet aa)",simp_all)
+            apply (metis 4 5 7 firstInNeta firstInNet alternativelistconc2)
+           apply (subgoal_tac "first_destNet a \<noteq> first_srcNet aa")
+            apply (metis 4 5 7 firstInNeta firstInNet alternativelistconc2)
+           apply (metis 3 4 5 first_bothNetsd insert_commute)
+          apply (metis 2 5 14 OTNaux)
+         apply (metis 2 5 14 OTNaux)
         apply (case_tac "c = first_srcNet aa", simp_all)
-        apply (metis 2 5 14 20 OTNaux)
+         apply (metis 2 5 14 20 OTNaux)
         apply (subgoal_tac "c = first_destNet aa", simp)
-        apply (subgoal_tac "d = first_srcNet aa", simp)
-        apply (case_tac "(first_srcNet a) \<noteq> (first_destNet aa)",simp_all)
-        apply (metis 4 5 7 firstInNeta firstInNet alternativelistconc2)
-        apply (subgoal_tac "first_destNet a \<noteq> first_srcNet aa")
-        apply (metis 4 5 7 firstInNeta firstInNet alternativelistconc2)
-        apply (metis 3 4 5 first_bothNetsd insert_commute)
-        apply (metis 2 5 14 OTNaux)
-        apply (metis 2 5 14 OTNaux)
-        apply (case_tac "c = first_srcNet aa", simp_all)
-        apply (metis 2 5 14 20 OTNaux)
-        apply (subgoal_tac "c = first_destNet aa", simp)
-        apply (subgoal_tac "d = first_srcNet aa", simp)
-        apply (case_tac "(first_destNet a) \<noteq> (first_destNet aa)",simp_all)
-        apply (metis 4 5 7 14 firstInNet alternativelistconc2)
-        apply (subgoal_tac "first_srcNet a \<noteq> first_srcNet aa")
-        apply (metis 4 5 7 14 firstInNeta alternativelistconc2)
-        apply (metis 3 4 5 first_bothNetsd  insert_commute)
-        apply (metis 2 5 14 OTNaux)
+         apply (subgoal_tac "d = first_srcNet aa", simp)
+          apply (case_tac "(first_destNet a) \<noteq> (first_destNet aa)",simp_all)
+           apply (metis 4 5 7 14 firstInNet alternativelistconc2)
+          apply (subgoal_tac "first_srcNet a \<noteq> first_srcNet aa")
+           apply (metis 4 5 7 14 firstInNeta alternativelistconc2)
+          apply (metis 3 4 5 first_bothNetsd  insert_commute)
+         apply (metis 2 5 14 OTNaux)
         apply (metis 2 5 14 OTNaux)
         done
     qed
@@ -2186,25 +2044,25 @@ proof -
     show "netsDistinct ab d \<or> netsDistinct b c"   
       apply (insert 1 2 3 4 5 6 7 8 9 10 11 12)           
       apply (cases "sdnets a = {(first_srcNet a, first_destNet a)}")
-      apply (cases "sdnets aa = {(first_srcNet aa, first_destNet aa)}", simp_all)
-      apply (case_tac "(c = first_srcNet aa \<and> d = first_destNet aa)", simp_all)
-      apply (case_tac "(first_srcNet a) \<noteq> (first_destNet aa)", simp_all)
-      apply (metis firstInNeta firstInNet alternativelistconc2)
-      apply (subgoal_tac "first_destNet a \<noteq> first_srcNet aa")
-      apply (metis firstInNeta firstInNet alternativelistconc2)
-      apply (metis first_bothNetsd insert_commute)
-      apply (case_tac "(c = first_srcNet aa \<and> d = first_destNet aa)", simp_all)
-      apply (case_tac "(ab = first_srcNet a \<and> b = first_destNet a)", simp_all)
-      apply (case_tac "(first_destNet a) \<noteq> (first_srcNet aa)",simp_all)
-      apply (metis firstInNeta firstInNet alternativelistconc2)
-      apply (subgoal_tac "first_srcNet a \<noteq> first_destNet aa")
-      apply (metis firstInNeta firstInNet alternativelistconc2)
-      apply (metis first_bothNetsd insert_commute)
-      apply (case_tac "(first_srcNet aa) \<noteq> (first_srcNet a)",simp_all)
-      apply (metis firstInNeta alternativelistconc2)
-      apply (case_tac "first_destNet aa \<noteq> first_destNet a",simp_all)
-      apply (metis firstInNet alternativelistconc2)
-      apply (metis first_bothNetsd)    
+       apply (cases "sdnets aa = {(first_srcNet aa, first_destNet aa)}", simp_all)
+        apply (case_tac "(c = first_srcNet aa \<and> d = first_destNet aa)", simp_all)
+        apply (case_tac "(first_srcNet a) \<noteq> (first_destNet aa)", simp_all)
+         apply (metis firstInNeta firstInNet alternativelistconc2)
+        apply (subgoal_tac "first_destNet a \<noteq> first_srcNet aa")
+         apply (metis firstInNeta firstInNet alternativelistconc2)
+        apply (metis first_bothNetsd insert_commute)
+       apply (case_tac "(c = first_srcNet aa \<and> d = first_destNet aa)", simp_all)
+        apply (case_tac "(ab = first_srcNet a \<and> b = first_destNet a)", simp_all)
+        apply (case_tac "(first_destNet a) \<noteq> (first_srcNet aa)",simp_all)
+         apply (metis firstInNeta firstInNet alternativelistconc2)
+        apply (subgoal_tac "first_srcNet a \<noteq> first_destNet aa")
+         apply (metis firstInNeta firstInNet alternativelistconc2)
+        apply (metis first_bothNetsd insert_commute)
+       apply (case_tac "(first_srcNet aa) \<noteq> (first_srcNet a)",simp_all)
+        apply (metis firstInNeta alternativelistconc2)
+       apply (case_tac "first_destNet aa \<noteq> first_destNet a",simp_all)
+        apply (metis firstInNet alternativelistconc2)
+       apply (metis first_bothNetsd)    
     proof - 
       assume 13:" \<forall>ab b. ab \<noteq> b \<and> ab\<in>set(net_list_aux[a,aa]) \<and> b \<in> set(net_list_aux[a,aa])
                              \<longrightarrow> netsDistinct ab b "
@@ -2220,42 +2078,42 @@ proof -
       show   "first_destNet a \<noteq> first_srcNet a \<Longrightarrow> netsDistinct ab d \<or> netsDistinct b c"
         apply (insert 1 2 3 4 5 6   13 14 15 16 17)
         apply (cases "sdnets aa = {(first_srcNet aa, first_destNet aa)}", simp_all)
-        apply (case_tac "(c = first_srcNet aa \<and> d = first_destNet aa)", simp_all)
-        apply (case_tac "(ab = first_srcNet a \<and> b = first_destNet a)", simp_all)
-        apply (case_tac "(first_destNet a) \<noteq> (first_srcNet aa)",simp_all)
-        apply (metis firstInNeta firstInNet alternativelistconc2)
-        apply (subgoal_tac "first_srcNet a \<noteq> first_destNet aa")
-        apply (metis firstInNeta firstInNet alternativelistconc2)
-        apply (metis first_bothNetsd insert_commute)
-        apply (case_tac "(first_srcNet aa) \<noteq> (first_srcNet a)",simp_all)
-        apply (metis firstInNeta alternativelistconc2)
-        apply (case_tac "first_destNet aa \<noteq> first_destNet a",simp_all)
-        apply (metis firstInNet alternativelistconc2)
-        apply (metis first_bothNetsd)
+         apply (case_tac "(c = first_srcNet aa \<and> d = first_destNet aa)", simp_all)
+         apply (case_tac "(ab = first_srcNet a \<and> b = first_destNet a)", simp_all)
+          apply (case_tac "(first_destNet a) \<noteq> (first_srcNet aa)",simp_all)
+           apply (metis firstInNeta firstInNet alternativelistconc2)
+          apply (subgoal_tac "first_srcNet a \<noteq> first_destNet aa")
+           apply (metis firstInNeta firstInNet alternativelistconc2)
+          apply (metis first_bothNetsd insert_commute)
+         apply (case_tac "(first_srcNet aa) \<noteq> (first_srcNet a)",simp_all)
+          apply (metis firstInNeta alternativelistconc2)
+         apply (case_tac "first_destNet aa \<noteq> first_destNet a",simp_all)
+          apply (metis firstInNet alternativelistconc2)
+         apply (metis first_bothNetsd)
       proof -
         assume 20: "{(first_srcNet a, first_destNet a), (first_destNet a, first_srcNet a)} \<noteq>
                         {(first_srcNet aa, first_destNet aa), (first_destNet aa, first_srcNet aa)}"
           and    21: "first_destNet a \<noteq> first_srcNet a"
         show       "netsDistinct ab d \<or> netsDistinct b c"
           apply (case_tac "(c = first_srcNet aa \<and> d = first_destNet aa)", simp_all)
-          apply (case_tac "(ab = first_srcNet a \<and> b = first_destNet a)", simp_all)
-          apply (case_tac "(first_destNet a) \<noteq> (first_srcNet aa)", simp_all)
-          apply (metis 4 5 7 firstInNeta firstInNet alternativelistconc2)
-          apply (subgoal_tac "first_srcNet a \<noteq> first_destNet aa")
-          apply (metis 4 5 7 firstInNeta firstInNet alternativelistconc2)
-          apply (metis 20 insert_commute)
-          apply (case_tac "(first_srcNet aa) \<noteq> (first_srcNet a)", simp_all)
-          apply (metis 4 5 13 14  firstInNeta alternativelistconc2)
-          apply (case_tac "first_destNet aa \<noteq> first_destNet a", simp_all)
-          apply (metis 4 5 13 14  firstInNet alternativelistconc2)
-          apply (case_tac "(ab = first_srcNet a \<and> b = first_destNet a)", simp_all)
-          apply (case_tac "(first_destNet a) \<noteq> (first_srcNet aa)", simp_all)
-          apply (metis  20)
+           apply (case_tac "(ab = first_srcNet a \<and> b = first_destNet a)", simp_all)
+            apply (case_tac "(first_destNet a) \<noteq> (first_srcNet aa)", simp_all)
+             apply (metis 4 5 7 firstInNeta firstInNet alternativelistconc2)
+            apply (subgoal_tac "first_srcNet a \<noteq> first_destNet aa")
+             apply (metis 4 5 7 firstInNeta firstInNet alternativelistconc2)
+            apply (metis 20 insert_commute)
+           apply (case_tac "(first_srcNet aa) \<noteq> (first_srcNet a)", simp_all)
+            apply (metis 4 5 13 14  firstInNeta alternativelistconc2)
+           apply (case_tac "first_destNet aa \<noteq> first_destNet a", simp_all)
+            apply (metis 4 5 13 14  firstInNet alternativelistconc2)
+           apply (case_tac "(ab = first_srcNet a \<and> b = first_destNet a)", simp_all)
+           apply (case_tac "(first_destNet a) \<noteq> (first_srcNet aa)", simp_all)
+            apply (metis  20)
           apply (subgoal_tac "first_srcNet a \<noteq> first_srcNet aa")
-          apply (metis  20)
-          apply (metis 21)
+            apply (metis  20)
+           apply (metis 21)
           apply (case_tac "(first_srcNet aa) \<noteq> (first_destNet a)")
-          apply (metis (no_types, lifting)  2 3 4 5 7 14 OTNaux 
+           apply (metis (no_types, lifting)  2 3 4 5 7 14 OTNaux 
               firstInNet firstInNeta first_bothNetsd isInAlternativeList) 
           by (metis 2 4 5 7 20 14 OTNaux doubleton_eq_iff firstInNet 
               firstInNeta isInAlternativeList)
@@ -2268,13 +2126,10 @@ lemma ANDaux3[rule_format]:
   "y \<in> set xs \<longrightarrow> a \<in> set (net_list_aux [y]) \<longrightarrow>  a \<in> set (net_list_aux xs)"
   by (induct xs) (simp_all add: isInAlternativeList)
     
-    
 lemma ANDaux2: 
   "allNetsDistinct (x # xs) \<Longrightarrow> y \<in> set xs \<Longrightarrow> allNetsDistinct [x,y]"
   apply (simp add: allNetsDistinct_def)
   by (meson ANDaux3 isInAlternativeList netlistaux)
-    
-    
     
 lemma NCisSD2[rule_format]: 
   "\<not> member DenyAll a     \<Longrightarrow>  OnlyTwoNets (a#p) \<Longrightarrow> 
@@ -2297,10 +2152,10 @@ proof (induct p, simp_all, case_tac "a = DenyAll", simp_all, goal_cases)
           noDenyAll1 (a # p) \<longrightarrow> allNetsDistinct (a # p) \<longrightarrow> (\<forall>s. s \<in> set p \<longrightarrow> 
           disjSD_2 a s) \<and> separated p"
     apply (intro impI,drule mp, erule OTNConc,drule mp)
-    apply (case_tac p, simp_all) 
+     apply (case_tac p, simp_all) 
     apply (drule mp,erule noDA1C, intro conjI  allI impI  NCisSD2, simp_all)
-    apply (case_tac a, simp_all)
-    apply (case_tac a, simp_all)
+      apply (case_tac a, simp_all)
+     apply (case_tac a, simp_all)
     using ANDConc by auto
 next
   fix a::"('a set set,'b) Combinators " fix p ::"('a set set,'b) Combinators list"
@@ -2328,7 +2183,7 @@ next
                       (\<forall>s. s \<in> set p \<longrightarrow> disjSD_2 a s) \<and> separated p"
       apply(insert Cons.hyps `a = DenyAll`)
       apply (intro impI,drule mp, erule OTNConc,drule mp)
-      apply (case_tac p, simp_all) 
+       apply (case_tac p, simp_all) 
       apply (case_tac a, simp_all)
       apply (case_tac a, simp_all)
       by (simp add: ANDConc disjSD_2_def noDA1eq)
@@ -2343,7 +2198,6 @@ next
   qed
 qed
   
-  
 lemma NC2Sep[rule_format]: "noDenyAll1 p \<longrightarrow> NetsCollected2 (separate p)"
 proof (induct p rule: separate.induct, simp_all, goal_cases)
   fix x :: "('a, 'b) Combinators list"
@@ -2352,15 +2206,15 @@ proof (induct p rule: separate.induct, simp_all, goal_cases)
 next
   fix v va fix y::" ('a, 'b) Combinators" fix z
   case 2 then show ?case   
-    by (simp add: firstList.simps(1) fl2 noDA1eq noDenyAll.simps(1))
+    by (simp add: fl2 noDA1eq)
 next
   fix v va vb fix y::" ('a, 'b) Combinators" fix z
   case 3 then show ?case
-    by (simp add: firstList.simps(1) fl2 noDA1eq noDenyAll.simps(1))
+    by (simp add: fl2 noDA1eq)
 next
   fix v va fix y::" ('a, 'b) Combinators" fix z
   case 4 then show ?case
-    by (simp add: firstList.simps(1) fl2 noDA1eq noDenyAll.simps(1))         
+    by (simp add: fl2 noDA1eq)         
 qed         
   
 lemma separatedSep[rule_format]: 
@@ -2371,13 +2225,7 @@ lemma separatedSep[rule_format]:
     
 lemma rADnMT[rule_format]: "p \<noteq> []  \<longrightarrow> removeAllDuplicates p \<noteq> []"
   by (induct p) simp_all
-    
-    (* TODO: Prove this lemma:
-lemma all2: "all_in_list (policy2list p) (Nets_List p)"
-apply (induct "policy2list p" "Nets_List p" rule: all_in_list.induct)
-apply simp_all
-*)
-    
+        
 lemma remDupsNMT[rule_format]: "p \<noteq> [] \<longrightarrow> remdups p \<noteq> []"
   by (metis remdups_eq_nil_iff) 
     
@@ -2392,6 +2240,5 @@ lemma sets_distinct5: "(n::int) < m \<Longrightarrow> {(a,b). a = n} \<noteq> {(
     
 lemma sets_distinct6: "(m::int) < n \<Longrightarrow> {(a,b). a = n} \<noteq> {(a,b). a = m}"
   by auto
-    
 end
   
