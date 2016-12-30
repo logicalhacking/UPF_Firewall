@@ -34,7 +34,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************)
 
-chapter {* Firewall Policy Normalisation *}
+section {* Firewall Policy Normalisation *}
 theory  
   FWNormalisation
   imports 
