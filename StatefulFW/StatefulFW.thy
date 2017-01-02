@@ -35,7 +35,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************)
 
-subsection {* Stateful Network Protocols *}
+section {* Stateful Network Protocols *}
 theory 
   StatefulFW
   imports

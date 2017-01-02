@@ -35,7 +35,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************)
 
-section {* Stateful Protocols *}
+subsection {* Stateful Protocols: Foundations *}
 theory 
   StatefulCore 
   imports 
