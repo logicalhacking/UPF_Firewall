@@ -47,9 +47,8 @@ text{*
   complicated example, namely Voice over IP (VoIP). VoIP is
   standardized by the ITU-T under the name H.323, which can be seen as
   an "umbrella standard" which aggregates standards for multimedia
-  conferencing over packet-based networks (for a good overview of the
-  protocol suite, see \cite{switch_basic}).  H.323 poses many problems
-  to firewalls. These problems include (taken from~\cite{vtel}):
+  conferencing over packet-based networks. H.323 poses many problems
+  to firewalls. These problems include:
   \begin{itemize}
     \item An H.323 call is made up of many different simultaneous
           connections.
@@ -60,8 +59,7 @@ text{*
   \end{itemize}
 
   Again we only consider a simplified VoIP scenario with the following
-  seven messages which are grouped into four subprotocols (see Figure
-  \ref{voip}):
+  seven messages which are grouped into four subprotocols:
   \begin{itemize}
     \item Registration and Admission (H.225, port 1719): The caller
           contacts its gatekeeper with a call request. The gatekeeper
