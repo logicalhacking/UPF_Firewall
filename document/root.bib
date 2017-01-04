@@ -251,4 +251,150 @@
 	year	= 	{2015},
 } 
 
+@Book{            spivey:z-notation:1992,
+  bibkey        = {spivey:z-notation:1992},
+  author        = {J. M. Spivey},
+  title         = {The {Z} Notation: A Reference Manual},
+  publisher     = pub-prentice,
+  address       = pub-prentice:adr,
+  edition       = {2nd},
+  length        = 150,
+  year          = 1992,
+  isbn          = {0-139-78529-9},
+  acknowledgement={brucker, 2007-04-23},
+  abstract      = {This is a revised edition of the first widely available
+                  reference manual on Z originally published in 1989. The
+                  book provides a complete and definitive guide to the use of
+                  Z in specifying information systems, writing specifications
+                  and designing implementations. \par Contents: Tutorial
+                  introduction; Background; The Z language; The mathematical
+                  tool-kit; Sequential systems; Syntax summary; Changes from
+                  the first edition; Glossary.}
+}
+
+@InCollection{    brucker.ea:hol-testgen-fw:2013,
+  abstract      = { The \testgen environment is conceived as a system for
+                  modeling and semi-automated test generation with an
+                  emphasis on expressive power and generality. However, its
+                  underlying technical framework Isabelle/\acs{hol} supports the
+                  customization as well as the development of highly
+                  automated add-ons working in specific application domains.
+
+                  In this paper, we present \testgen/fw, an add-on for the
+                  test framework \testgen, that allows for testing the
+                  conformance of firewall implementations to high-level
+                  security policies. Based on generic theories specifying a
+                  security-policy language, we developed specific theories
+                  for network data and firewall policies. On top of these
+                  firewall specific theories, we provide mechanisms for
+                  policy transformations based on derived rules and adapted
+                  code-generators producing test drivers. Our empirical
+                  evaluations shows that \testgen/fw is a competitive
+                  environment for testing firewalls or high-level policies of
+                  local networks. },
+  keywords      = {symbolic test case generations, black box testing, theorem
+                  proving, network security, firewall testing, conformance
+                  testing},
+  location      = {Shanghai},
+  author        = {Achim D. Brucker and Lukas Br{\"u}gger and Burkhart Wolff},
+  booktitle     = {International Colloquium on Theoretical Aspects of
+                  Computing (\acs{ictac})},
+  language      = {USenglish},
+  publisher     = pub-springer,
+  series        = s-lncs,
+  number        = 8049,
+  doi           = {10.1007/978-3-642-39718-9_7},
+  editor        = {Zhiming Liu and Jim Woodcock and Huibiao Zhu},
+  title         = {HOl-TestGen/FW: An Environment for Specification-based
+                  Firewall Conformance Testing},
+  categories    = {holtestgen},
+  classification= {conference},
+  areas         = {security, formal methods},
+  public        = {yes},
+  year          = 2013,
+  pages         = {112--121},
+  isbn          = {978-3-642-39717-2},
+}
+@Article{         brucker.ea:theorem-prover:2012,
+  author        = {Achim D. Brucker and Burkhart Wolff},
+  journal       = j-fac,
+  publisher     = pub-springer,
+  language      = {USenglish},
+  categories    = {holtestgen},
+  title         = {On Theorem Prover-based Testing},
+  year          = 2013,
+  issn          = {0934-5043},
+  pages         = {683--721},
+  volume        = 25,
+  number        = 5,
+  classification= {journal},
+  areas         = {formal methods, software},
+  public        = {yes},
+  doi           = {10.1007/s00165-012-0222-y},
+  keywords      = {test case generation, domain partitioning, test sequence,
+                  theorem proving, \testgen},
+  abstract      = {\testgen is a specification and test case generation
+                  environment extending the interactive theorem prover
+                  Isabelle/\acs{hol}. As such, \testgen allows for an integrated
+                  workflow supporting interactive theorem proving, test case
+                  generation, and test data generation.
+
+                  The \testgen method is two-staged: first, the original
+                  formula is partitioned into test cases by transformation
+                  into a normal form called test theorem. Second, the test
+                  cases are analyzed for ground instances (the test data)
+                  satisfying the constraints of the test cases. Particular
+                  emphasis is put on the control of explicit test-hypotheses
+                  which can be proven over concrete programs.
+
+                  Due to the generality of the underlying framework, our
+                  system can be used for black-box unit, sequence, reactive
+                  sequence and white-box test scenarios. Although based on
+                  particularly clean theoretical foundations, the system can
+                  be applied for substantial case-studies. },
+}
+
+
+@InProceedings{   brucker.ea:model-based:2011,
+  title         = {An Approach to Modular and Testable Security Models of
+                  Real-world Health-care Applications},
+  author        = {Achim D. Brucker and Lukas Br{\"u}gger and Paul Kearney
+                  and Burkhart Wolff},
+  booktitle     = conf-sacmat,
+  language      = {USenglish},
+  publisher     = pub-acm,
+  location      = {Innsbruck, Austria},
+  categories    = {holtestgen},
+  classification= {conference},
+  areas         = {security, formal methods},
+  year          = 2011,
+  copyright     = {\acs{acm}},
+  copyrighturl  = {http://dl.acm.org/authorize?431936},
+  public        = {yes},
+  pages         = {133--142},
+  abstract      = {We present a generic modular policy modelling framework
+                  and instantiate it with a substantial case study for
+                  model-based testing of some key security mechanisms of
+                  applications and services of the NPfIT. NPfIT, the National
+                  Programme for \acs{it}, is a very large-scale development project
+                  aiming to modernise the \acs{it} infrastructure of the \acs{nhs} in
+                  England. Consisting of heterogeneous and distributed
+                  applications, it is an ideal target for model-based testing
+                  techniques of a large system exhibiting critical security
+                  features.
+
+                  We model the four information governance principles,
+                  comprising a role-based access control model, as well as
+                  policy rules governing the concepts of patient consent,
+                  sealed envelopes and legitimate relationship. The model is
+                  given in \acs{hol} and processed together with suitable test
+                  specifications in the \testgen system, that generates
+                  test sequences according to them. Particular emphasis is
+                  put on the modular description of security policies and
+                  their generic combination and its consequences for
+                  model-based testing.},
+  doi           = {10.1145/1998441.1998461},
+  isbn          = {978-1-4503-0688-1},
+}
+
 

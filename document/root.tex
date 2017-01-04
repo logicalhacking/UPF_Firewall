@@ -15,6 +15,7 @@
 \usepackage{stmaryrd}
 \usepackage{paralist}
 \usepackage{xspace}
+\usepackage{amsmath}
 \usepackage[USenglish]{babel}
 \newcommand{\testgen}{HOL-TestGen\xspace}
 \newcommand{\testgenFW}{HOL-TestGen/FW\xspace}
@@ -24,7 +25,41 @@
 \sloppy
 
 \usepackage{amssymb}
+\newcommand{\isadefinition} {{\operatorname{definition}}}
+\newcommand{\types} {{\operatorname{type\_synonym}}}
+\newcommand{\datatype} {{\operatorname{datatype}}}
+\newcommand{\ap}{\,}
 
+
+\newcommand{\dom}{\mathrm{dom}}
+\newcommand{\ran}{\mathrm{ran}}
+\newcommand{\ofType}{\!::\!}
+\newcommand{\HolBin}[0]{\ensuremath{\mathrm{bin}}}
+\newcommand{\HolNum}[0]{\ensuremath{\mathrm{num}}}
+\newcommand{\HolBoolean}[0]{\ensuremath{\mathrm{bool}}}
+\newcommand{\HolString}[0]{\ensuremath{\mathrm{string}}}
+\newcommand{\HolInteger}[0]{\ensuremath{\mathrm{int}}}
+\newcommand{\HolNat}[0]{\ensuremath{\mathrm{nat}}}
+\newcommand{\HolReal}[0]{\ensuremath{\mathrm{real}}}
+\newcommand{\HolSet}[1]{#1\ap\ensuremath{\mathrm{set}}}
+\newcommand{\HolList}[1]{#1\ap\ensuremath{\mathrm{list}}}
+%\newcommand{\HolOrderedSet}[1]{#1~\ensuremath{\mathrm{orderedset}}}
+\newcommand{\HolMultiset}[1]{#1\ap\ensuremath{\mathrm{multiset}}}
+\newcommand{\classType}[2]{#1\ap\ensuremath{\mathrm{#2}}}
+\newcommand{\bottom}{\bot}
+\DeclareMathOperator{\HolSome}{Some}
+\DeclareMathOperator{\HolNone}{None}
+\DeclareMathOperator{\Poverride}{\oplus}
+\DeclareMathOperator{\prodTwo}{\otimes_2}
+
+\newcommand{\HolMkSet}[1]{\operatorname{set} #1}
+\newcommand{\spot}{.\;}
+\newcommand{\where} {{\operatorname{where}}}
+\DeclareMathOperator{\HolIf}{if}
+\DeclareMathOperator{\HolLet}{let}
+\DeclareMathOperator{\HolIn}{in}
+\DeclareMathOperator{\HolThen}{then}
+\DeclareMathOperator{\HolElse}{else}
 
 
 \newcommand{\isasymmodels}{\isamath{\models}}
@@ -81,9 +116,7 @@
       formalization was originally developed with for generating test
       cases for testing the security configuration actual firewall and
       router (middle-boxes) using HOL-TestGen. Our work focuses on
-      modeling application level protocols on top of tcp/ip. Thus, its
-      abstraction level differs from Diekmann's Network Security
-      Policy Verification formalization
+      modeling application level protocols on top of tcp/ip. 
     }
 }
 
