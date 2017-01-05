@@ -38,8 +38,9 @@
 subsection {* Policy Core *}
 theory 
   PolicyCore
-  imports NetworkCore 
-    "$AFP/UPF/UPF"
+  imports 
+     NetworkCore 
+     "../../UPF/UPF"
 begin
 
 

@@ -18,6 +18,9 @@ mkdir -p ~/.isabelle/Isabelle2016-1/etc
 echo "/home/isabelle/afp" >> ~/.isabelle/Isabelle2016-1/etc/components
 ```
 
+Now, you can either link the UPF entry to a sibling directory of UPF-Firewall such 
+that the import `../../UPF/UPF` in `PacketFilter/PolicyCore.thy` is valid. Alternatively, 
+you need to change this import to `$AFP/UPF/UPF`.
 
 ## How to build
 ```

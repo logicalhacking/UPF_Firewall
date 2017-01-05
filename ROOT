@@ -1,6 +1,4 @@
-chapter AFP
-
-session "UPF-Firewall" (AFP) = HOL +
+session "UPF-Firewall" (AFP) = UPF +
   description {* Formal Network Models and Their Application to Firewall Policies *}
   options [timeout=600, document=pdf, document_output=document_generated, document_variants="document:outline=/proof,/ML"]
   theories
