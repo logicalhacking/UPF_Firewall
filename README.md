@@ -24,7 +24,7 @@ you need to change this import to `$AFP/UPF/UPF`.
 
 ## How to build
 ```
-isabelle build -d . UPF-Firewall
+isabelle build -d UPF-Firewall . UPF-Firewall
 ```
 
 ## Authors
