@@ -34,3 +34,10 @@ isabelle build -d UPF-Firewall . UPF-Firewall
 
 ## License
 This project is licensed under a 3-clause BSD-style license.
+
+## Publications
+* Achim D. Brucker, Lukas Brügger, and Burkhart Wolff. Formal Firewall
+  Conformance Testing: An Application of Test and Proof Techniques. In
+  Software Testing, Verification & Reliability (STVR), 25 (1), pages
+  34-71, 2015.
+  https://www.brucker.ch/bibliography/abstract/brucker.ea-formal-fw-testing-2014

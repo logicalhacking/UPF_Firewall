@@ -1,0 +1,68 @@
+To cite the use of this formal theory, please use
+
+
+A BibTeX entry for LaTeX users is
+
+
+
+An overview of the formalization is given in:
+
+  Achim D. Brucker, Lukas Brügger, and Burkhart Wolff. Formal Firewall
+  Conformance Testing: An Application of Test and Proof Techniques. In
+  Software Testing, Verification & Reliability (STVR), 25 (1), pages
+  34-71, 2015.
+  https://www.brucker.ch/bibliography/abstract/brucker.ea-formal-fw-testing-2014
+
+A BibTeX entry for LaTeX users is
+@Article{ brucker.ea:formal-fw-testing:2014,
+	abstract = {Firewalls are an important means to secure
+	            critical ICT infrastructures. As configurable
+	            off-the-shelf prod\-ucts, the effectiveness of a
+	            firewall crucially depends on both the correctness
+	            of the implementation itself as well as the
+	            correct configuration. While testing the
+	            implementation can be done once by the
+	            manufacturer, the configuration needs to be tested
+	            for each application individually. This is
+	            particularly challenging as the configuration,
+	            implementing a firewall policy, is inherently
+	            complex, hard to understand, administrated by
+	            different stakeholders and thus difficult to
+	            validate. This paper presents a formal model of
+	            both stateless and stateful firewalls (packet
+	            filters), including NAT, to which a
+	            specification-based conformance test case
+	            gen\-eration approach is applied. Furthermore, a
+	            verified optimisation technique for this approach
+	            is presented: starting from a formal model for
+	            stateless firewalls, a collection of
+	            semantics-preserving policy transformation rules
+	            and an algorithm that optimizes the specification
+	            with respect of the number of test cases required
+	            for path coverage of the model are derived. We
+	            extend an existing approach that integrates
+	            verification and testing, that is, tests and
+	            proofs to support conformance testing of network
+	            policies. The presented approach is supported by a
+	            test framework that allows to test actual
+	            firewalls using the test cases generated on the
+	            basis of the formal model. Finally, a report on
+	            several larger case studies is presented.},
+        author	=  {Achim D. Brucker and Lukas Br{\"u}gger and Burkhart Wolff},
+	doi	=  {10.1002/stvr.1544},
+	journal	=  {Software Testing, Verification & Reliability (STVR)},
+	keywords= {model-based testing; conformance testing; security
+	           testing; firewall; specification-based testing;
+	           testing cloud infrastructure, transformation for
+	           testability; HOL-TestGen; test and proof; security
+	           configuration testing},
+        language= {USenglish},
+	number	= {1},
+	pages	= {34--71},
+	pdf	= {https://www.brucker.ch/bibliography/download/2014/brucker.ea-formal-fw-testing-2014.pdf},
+	publisher= {John Wiley & Sons},
+	title	= {Formal Firewall Conformance Testing: An Application of Test and Proof Techniques},
+	url	= {https://www.brucker.ch/bibliography/abstract/brucker.ea-formal-fw-testing-2014},
+	volume	= {25},
+	year	= {2015},
+} 
