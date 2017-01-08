@@ -1,8 +1,8 @@
 (*****************************************************************************
  * Copyright (c) 2005-2010 ETH Zurich, Switzerland
  *               2008-2015 Achim D. Brucker, Germany
- *               2009-2016 Université Paris-Sud, France
- *               2015-2016 The University of Sheffield, UK
+ *               2009-2017 Université Paris-Sud, France
+ *               2015-2017 The University of Sheffield, UK
  *
  * All rights reserved.
  *
@@ -127,13 +127,13 @@ definition content :: "('\<alpha>::adr,'\<beta>) packet \<Rightarrow> '\<beta> c
 datatype protocol = tcp | udp
 
 lemma either: "\<lbrakk>a \<noteq> tcp;a \<noteq> udp\<rbrakk> \<Longrightarrow> False"
-  by (case_tac a,simp_all)
+  by (case_tac "a",simp_all)
 
 lemma either2[simp]: "(a \<noteq> tcp) = (a = udp)"
-  by (case_tac a,simp_all)                 
+  by (case_tac "a",simp_all)                 
 
 lemma either3[simp]: "(a \<noteq> udp) = (a = tcp)"
-  by (case_tac a,simp_all)                
+  by (case_tac "a",simp_all)                
 
 text{* 
   The following two constants give the source and destination port number of a packet. Address 

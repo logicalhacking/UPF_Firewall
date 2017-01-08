@@ -1,8 +1,8 @@
 (*****************************************************************************
  * Copyright (c) 2005-2010 ETH Zurich, Switzerland
  *               2008-2015 Achim D. Brucker, Germany
- *               2009-2016 Université Paris-Sud, France
- *               2015-2016 The University of Sheffield, UK
+ *               2009-2017 Université Paris-Sud, France
+ *               2015-2017 The University of Sheffield, UK
  *
  * All rights reserved.
  *
@@ -74,7 +74,7 @@ definition
 
 
 text{* All these combinators and the default rules are put into one
-  single lemma called @{text PolicyCombinators} to faciliate proving
+  single lemma called @{text PolicyCombinators} to facilitate proving
   over policies.  *}
 
 

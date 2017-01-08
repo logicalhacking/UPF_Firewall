@@ -1,8 +1,8 @@
 (*****************************************************************************
  * Copyright (c) 2005-2010 ETH Zurich, Switzerland
  *               2008-2015 Achim D. Brucker, Germany
- *               2009-2016 Université Paris-Sud, France
- *               2015-2016 The University of Sheffield, UK
+ *               2009-2017 Université Paris-Sud, France
+ *               2015-2017 The University of Sheffield, UK
  *
  * All rights reserved.
  *
@@ -56,31 +56,32 @@ lemma denyNMT: "deny_all \<noteq>  \<emptyset>"
     
 lemma wellformed_policy1_charn[rule_format]: 
 "wellformed_policy1 p \<longrightarrow> DenyAll \<in> set p \<longrightarrow> (\<exists> p'. p = DenyAll # p' \<and> DenyAll \<notin> set p')"
-  by(induct p,simp_all)
+  by(induct "p",simp_all)
     
 lemma singleCombinatorsConc: "singleCombinators (x#xs) \<Longrightarrow> singleCombinators xs"
   by (case_tac x,simp_all)
     
 lemma aux0_0: "singleCombinators x \<Longrightarrow> \<not> (\<exists> a b. (a\<oplus>b) \<in> set x)"
-  apply (induct x, simp_all)
-  apply (rule allI)+
-  by (case_tac a,simp_all)
-    
+  apply (induct "x", simp_all)
+  subgoal for a b 
+    by (case_tac "a",simp_all)
+  done
+  
 lemma aux0_4: "(a \<in> set x \<or> a \<in> set y) = (a \<in> set (x@y))"
   by auto
     
 lemma aux0_1: "\<lbrakk>singleCombinators xs; singleCombinators [x]\<rbrakk> \<Longrightarrow>
                singleCombinators (x#xs)"
-  by (case_tac x,simp_all) 
+  by (case_tac "x",simp_all) 
     
 lemma aux0_6: "\<lbrakk>singleCombinators xs; \<not> (\<exists> a b. x = a \<oplus> b)\<rbrakk> \<Longrightarrow>
                singleCombinators(x#xs)"
   apply (rule aux0_1,simp_all)
-  apply (case_tac x,simp_all)
+  apply (case_tac "x",simp_all)
   by auto
     
 lemma aux0_5: " \<not> (\<exists> a b. (a\<oplus>b) \<in> set x) \<Longrightarrow> singleCombinators x"
-  apply (induct x)   
+  apply (induct "x")   
    apply simp_all 
   by (metis aux0_6)
     
@@ -113,18 +114,24 @@ lemma aux10[rule_format]: "a \<in> set (net_list p) \<longrightarrow> a \<in> se
     
 lemma srcInNetListaux[simp]: 
   "\<lbrakk>x \<in> set p; singleCombinators[x]; x \<noteq> DenyAll\<rbrakk> \<Longrightarrow> srcNet x \<in> set (net_list_aux p)"
-  apply (induct p)
+  apply (induct "p")
    apply simp_all
-  apply (case_tac "x = a", simp_all)
-   apply (case_tac a, simp_all)+
+  subgoal for a p   
+    apply (case_tac "x = a", simp_all)
+     apply (case_tac a, simp_all)
+    apply (case_tac a, simp_all)
+    done
   done 
     
 lemma destInNetListaux[simp]: 
   "\<lbrakk>x \<in> set p; singleCombinators[x]; x \<noteq> DenyAll\<rbrakk> \<Longrightarrow> destNet x \<in> set (net_list_aux p)"
   apply (induct p)
    apply simp_all
-  apply (case_tac "x = a", simp_all)
-   apply (case_tac a, simp_all)+
+  subgoal for a p
+    apply (case_tac "x = a", simp_all)
+     apply (case_tac "a", simp_all)
+    apply (case_tac "a", simp_all)
+    done 
   done 
     
 lemma tND1: "\<lbrakk>allNetsDistinct p; x \<in> set p; y \<in> set p; a = srcNet x;
@@ -198,11 +205,13 @@ lemma aNDSubsetaux[rule_format]: "singleCombinators a  \<longrightarrow> set a \
    apply simp_all
   apply clarify
   apply (drule mp, erule singleCombinatorsConc)
-  apply (case_tac "a1")
-     apply (simp_all add: contra_subsetD)
-    apply (metis contra_subsetD)
-   apply (metis ND0aux1 ND0aux2 contra_subsetD)
-  apply (metis ND0aux3 ND0aux4 contra_subsetD)
+  subgoal for a a' x
+    apply (case_tac "a")
+       apply (simp_all add: contra_subsetD)
+      apply (metis contra_subsetD)
+     apply (metis ND0aux1 ND0aux2 contra_subsetD)
+    apply (metis ND0aux3 ND0aux4 contra_subsetD)
+    done
   done
     
 lemma aNDSetsEqaux[rule_format]: "singleCombinators a \<longrightarrow> singleCombinators b \<longrightarrow> 
@@ -217,16 +226,20 @@ lemma aNDSubset: "\<lbrakk>singleCombinators a;set a \<subseteq> set b; allNetsD
   apply (simp add: allNetsDistinct_def)
   apply (rule allI)+
   apply (rule impI)+
-  apply (drule_tac x = "aa" in spec, drule_tac x = "ba" in spec)
-  using aNDSubsetaux by blast
+  subgoal for x y 
+    apply (drule_tac x = "x" in spec, drule_tac x = "y" in spec)
+    using aNDSubsetaux by blast
+  done
     
 lemma aNDSetsEq: "\<lbrakk>singleCombinators a; singleCombinators b; set a = set b; 
                   allNetsDistinct b\<rbrakk> \<Longrightarrow> allNetsDistinct a"
   apply (simp add: allNetsDistinct_def)
   apply (rule allI)+
   apply (rule impI)+
-  apply (drule_tac x = "aa" in spec, drule_tac x = "ba" in spec)
-  using aNDSetsEqaux by auto
+  subgoal for x y 
+    apply (drule_tac x = "x" in spec, drule_tac x = "y" in spec)
+    using aNDSetsEqaux by auto
+  done
     
 lemma SCConca: "\<lbrakk>singleCombinators p; singleCombinators [a]\<rbrakk> \<Longrightarrow> 
                 singleCombinators (a#p)" 
@@ -285,7 +298,7 @@ lemma waux3[rule_format]: "\<lbrakk>x \<noteq> a;  x \<notin> set p\<rbrakk> \<L
   by (metis aux79)
     
 lemma wellformed1_sorted_aux[rule_format]: "wellformed_policy1 (x#p) \<Longrightarrow> 
-                                            wellformed_policy1 (insort x p l)" try
+                                            wellformed_policy1 (insort x p l)" 
   by (metis NormalisationGenericProofs.set_insort list.set(2) saux waux2 wellformed_eq 
             wellformed_policy1_strong.simps(2))
     
@@ -302,8 +315,11 @@ next
     
 lemma SR1Subset: "set (removeShadowRules1 p) \<subseteq> set p"
   apply (induct_tac p, simp_all)
-  apply (case_tac a, simp_all)
-  by auto
+  subgoal for x xs
+    apply (case_tac "x", simp_all) 
+       apply(auto)
+    done
+  done
     
 lemma SCSubset[rule_format]: " singleCombinators b \<longrightarrow> set a \<subseteq> set b \<longrightarrow>
                               singleCombinators a"
@@ -324,8 +340,11 @@ lemma SC_RS1[rule_format,simp]: "singleCombinators p \<longrightarrow> allNetsDi
   using ANDConc singleCombinatorsConc by blast
     
 lemma RS2Set[rule_format]: "set (removeShadowRules2 p) \<subseteq> set p"
-  by (induct p, simp_all) (case_tac a, auto)
-    
+  apply(induct p, simp_all)
+  subgoal for a as  
+    apply(case_tac a)
+    by(auto)
+  done
     
 lemma WP1: "a \<notin> set list \<Longrightarrow> a \<notin> set (removeShadowRules2 list)"
   using RS2Set [of list] by blast
@@ -338,7 +357,10 @@ lemma lCdom2: "(list2FWpolicy (a @ (b @ c))) = (list2FWpolicy ((a@b)@c))"
   by auto
     
 lemma SCConcEnd: "singleCombinators (xs @ [xa]) \<Longrightarrow> singleCombinators xs"
-  by (induct "xs", simp_all, case_tac a, simp_all)
+  apply (induct "xs", simp_all)
+  subgoal for a as
+    by  (case_tac "a" , simp_all)
+  done   
     
 lemma list2FWpolicyconc[rule_format]: "a \<noteq> [] \<longrightarrow>
                                (list2FWpolicy (xa # a)) = (xa) \<oplus> (list2FWpolicy a)"
@@ -358,7 +380,10 @@ lemma foo2: "a \<notin> set ps \<Longrightarrow>
     
     
 lemma SCnotConc[rule_format,simp]: "a\<oplus>b \<in> set p \<longrightarrow> singleCombinators p \<longrightarrow>False"
-  by (induct p, simp_all, case_tac aa, simp_all)
+  apply (induct p, simp_all)
+  subgoal for p ps  
+    by(case_tac p, simp_all)
+  done
     
 lemma auxx8: "removeShadowRules1_alternative_rev [x] = [x]"
   by (case_tac "x", simp_all)
@@ -384,10 +409,14 @@ lemma RS1_DA[simp]: "removeShadowRules1 (xs @ [DenyAll]) = [DenyAll]"
 lemma rSR1_eq: "removeShadowRules1_alternative = removeShadowRules1"
   apply (rule ext)
   apply (simp add: removeShadowRules1_alternative_def)
-  apply (rule_tac xs = x in rev_induct)
-  apply simp_all
-  apply (case_tac "xa = DenyAll", simp_all)
-  apply (metis RS1End aux114 rev.simps(2))
+  subgoal for x 
+    apply (rule_tac xs = x in rev_induct)
+     apply simp_all
+    subgoal for x xs
+      apply (case_tac "x = DenyAll", simp_all)
+      apply (metis RS1End aux114 rev.simps(2))
+      done
+    done
   done
     
 lemma domInterMT[rule_format]: "\<lbrakk>dom a \<inter> dom b = {}; x \<in> dom a\<rbrakk> \<Longrightarrow> x \<notin> dom b"
@@ -520,8 +549,10 @@ lemma distinct_RS2[rule_format,simp]: "distinct p \<longrightarrow>
   apply (induct p)
   apply simp_all
   apply clarify
-  apply (case_tac "a")
-  by auto
+  subgoal for a p 
+    apply (case_tac "a")
+    by auto
+  done
     
 lemma setPaireq: " {x, y} = {a, b} \<Longrightarrow> x = a \<and> y = b \<or> x = b \<and> y = a"
   by (metis  doubleton_eq_iff)
@@ -592,7 +623,9 @@ lemma sortedConcStart[rule_format]:
   apply simp
   apply (rule_tac y = "aa" in order_trans)
          apply simp_all
-  apply (case_tac ab, simp_all)
+  subgoal for p ps
+    apply (case_tac "p", simp_all)
+    done
   done
     
 lemma singleCombinatorsStart[simp]: "singleCombinators (x#xs) \<Longrightarrow> 
@@ -802,7 +835,12 @@ lemma distinct_sortQ[rule_format]:
 lemma singleCombinatorsAppend[rule_format]: 
   "singleCombinators (xs) \<longrightarrow> singleCombinators (ys) \<longrightarrow> singleCombinators (xs @ ys)"
   apply (induct xs, auto)
-   apply (case_tac a,simp_all)+
+  subgoal for a as
+    apply (case_tac a,simp_all)
+    done 
+  subgoal for a as
+    apply (case_tac a,simp_all)
+    done       
   done
     
 lemma sorted_append1[rule_format]:
@@ -909,10 +947,12 @@ lemma RS1n_assoc:
 lemma RS1n_nMT[rule_format,simp]: "p \<noteq> []\<longrightarrow> removeShadowRules1_alternative p \<noteq> []"
   apply (simp add: removeShadowRules1_alternative_def)
   apply (rule_tac xs = p in rev_induct, simp_all) 
-  apply (case_tac "xs = []", simp_all)
-   apply (case_tac x, simp_all)
-  apply (rule_tac xs = "xs" in rev_induct, simp_all)
-   apply (case_tac x, simp_all)+
+  subgoal for x xs
+    apply (case_tac "xs = []", simp_all)
+     apply (case_tac x, simp_all)
+    apply (rule_tac xs = "xs" in rev_induct, simp_all)
+     apply (case_tac x, simp_all)+
+    done
   done
     
 lemma RS1N_DA[simp]: "removeShadowRules1_alternative (a@[DenyAll]) = [DenyAll]"
@@ -964,8 +1004,10 @@ lemma wp1n_RS2[rule_format]:
     
 lemma RS2_NMT[rule_format]: "p \<noteq> [] \<longrightarrow> removeShadowRules2 p \<noteq> []"
   apply (induct p, simp_all)
-  apply (case_tac "p \<noteq> []", simp_all)
-   apply (case_tac "a", simp_all)+
+  subgoal for a p  
+    apply (case_tac "p \<noteq> []", simp_all)
+     apply (case_tac "a", simp_all)+
+    done
   done
     
 lemma wp1_alternative_not_mt[simp]: "wellformed_policy1_strong p \<Longrightarrow> p \<noteq> []"
@@ -976,7 +1018,11 @@ lemma AIL1[rule_format,simp]: "all_in_list p l \<longrightarrow>
   by (induct_tac p, simp_all)
     
 lemma wp1ID: "wellformed_policy1_strong (insertDeny (removeShadowRules1 p))"
-  by (induct p, simp_all, case_tac a, simp_all)
+  apply (induct p, simp_all)
+  subgoal for a p 
+    apply (case_tac a, simp_all)
+    done
+  done
     
 lemma dRD[simp]: "distinct (remdups p)"
   by simp
@@ -987,19 +1033,24 @@ lemma AILrd[rule_format,simp]: "all_in_list p l \<longrightarrow> all_in_list (r
 lemma AILiD[rule_format,simp]: "all_in_list p l \<longrightarrow> all_in_list (insertDeny p) l"
   apply (induct p, simp_all)
   apply (rule impI, simp)
-  apply (case_tac "a", simp_all)
+  subgoal for a p 
+    apply (case_tac a, simp_all)
+    done
   done
     
 lemma SCrd[rule_format,simp]:"singleCombinators p\<longrightarrow> singleCombinators(remdups p)"
   apply (induct p, simp_all)
-  apply (case_tac a)
-     apply simp_all
+  subgoal for a p 
+    apply (case_tac a, simp_all)
+    done
   done
     
 lemma SCRiD[rule_format,simp]: "singleCombinators p \<longrightarrow>
                                 singleCombinators(insertDeny p)"
   apply (induct p, simp_all)
-  apply (case_tac "a", simp_all)
+  subgoal for a p 
+    apply (case_tac a, simp_all)
+    done
   done
     
 lemma WP1rd[rule_format,simp]: 
@@ -1018,7 +1069,9 @@ lemma ANDiD[rule_format,simp]:
   apply (induct p, simp_all)
    apply (simp add: allNetsDistinct_def)
   apply (auto intro: ANDConc)
-  apply (case_tac "a",simp_all add: allNetsDistinct_def)
+  subgoal for a p 
+    apply (case_tac "a",simp_all add: allNetsDistinct_def)
+    done
   done
     
 lemma mr_iD[rule_format]: 
@@ -1030,14 +1083,22 @@ lemma WP1iD[rule_format,simp]: "wellformed_policy1_strong p \<longrightarrow>
   by (induct p, simp_all)
     
 lemma DAiniD: "DenyAll \<in> set (insertDeny p)"
-  by (induct p, simp_all, case_tac a, simp_all)
+  apply (induct p, simp_all)
+  subgoal for a p
+    apply(case_tac a, simp_all)
+    done
+  done
     
 lemma p2lNmt: "policy2list p \<noteq> []"
   by (rule policy2list.induct, simp_all)
     
 lemma AIL2[rule_format,simp]: 
   "all_in_list p l \<longrightarrow> all_in_list (removeShadowRules2 p) l"
-  by (induct_tac p, simp_all, case_tac a, simp_all)
+  apply (induct_tac p, simp_all)
+  subgoal for a p
+    apply(case_tac a, simp_all)
+    done
+  done
     
 lemma SCConc: "singleCombinators x \<Longrightarrow>  singleCombinators y \<Longrightarrow> singleCombinators (x@y)"
   apply (rule aux0_5)
@@ -1095,15 +1156,20 @@ lemma sortnMT: "p \<noteq> [] \<Longrightarrow> sort p l \<noteq> []"
     
 lemma idNMT[rule_format]: "p \<noteq> [] \<longrightarrow> insertDenies p \<noteq> []"
   apply (induct p, simp_all)
-  apply (case_tac a, simp_all)
+  subgoal for a p
+    apply(case_tac a, simp_all)
+    done
   done
     
 lemma OTNoTN[rule_format]: " OnlyTwoNets p \<longrightarrow> x \<noteq> DenyAll \<longrightarrow> x \<in> set p \<longrightarrow>  onlyTwoNets x"
   apply (induct p, simp_all, rename_tac a p)
   apply (intro impI  conjI,  simp)
-   apply (case_tac a, simp_all)
-  apply (drule mp, simp_all)
-  apply (case_tac a, simp_all)
+  subgoal for a p
+    apply(case_tac a, simp_all)
+    done
+  subgoal for a p
+    apply(case_tac a, simp_all)
+    done
   done
     
 lemma first_isIn[rule_format]:  "\<not> member DenyAll x \<longrightarrow> (first_srcNet x,first_destNet x) \<in> sdnets x"
@@ -1171,7 +1237,11 @@ lemma disjSD2aux:
   using first_isIn by blast
     
 lemma noDA1eq[rule_format]: "noDenyAll p \<longrightarrow> noDenyAll1 p"
-  by (induct p, simp,rename_tac a p, case_tac a, simp_all)
+  apply (induct p, simp,rename_tac a p)
+  subgoal for a p
+    apply(case_tac a, simp_all)
+    done
+  done
     
 lemma noDA1C[rule_format]: "noDenyAll1 (a#p) \<longrightarrow> noDenyAll1 p"
   by (case_tac a, simp_all,rule impI, rule noDA1eq, simp)+
@@ -1186,21 +1256,31 @@ lemma disjSD_2IDa:
   by(simp add:disjSD2aux)
     
 lemma noDAID[rule_format]: "noDenyAll p \<longrightarrow> noDenyAll (insertDenies p)"
-  by (induct p, simp_all,case_tac a, simp_all)
+  apply (induct p, simp_all)
+  subgoal for a p
+    apply(case_tac a, simp_all)
+    done
+  done
     
 lemma isInIDo[rule_format]:  
   "noDenyAll p  \<longrightarrow> s \<in> set (insertDenies p) \<longrightarrow> 
    (\<exists>! a. s = (DenyAllFromTo (first_srcNet a) (first_destNet a)) \<oplus>
    (DenyAllFromTo (first_destNet a) (first_srcNet a)) \<oplus> a \<and> a \<in> set p)"
   apply (induct p, simp, rename_tac a p)
-  apply (case_tac "a = DenyAll", simp)
-  apply (case_tac a, auto)
+  subgoal for a p
+    apply (case_tac "a = DenyAll", simp)
+    apply (case_tac a, auto)
+    done
   done
     
 lemma id_aux1[rule_format]: "DenyAllFromTo (first_srcNet s) (first_destNet s) \<oplus>
       DenyAllFromTo (first_destNet s) (first_srcNet s) \<oplus> s\<in> set (insertDenies p)
     \<longrightarrow> s \<in> set p"
-  by (induct p, simp_all, rename_tac a p, case_tac a, simp_all)
+  apply (induct p, simp_all, rename_tac a p)
+  subgoal for a p
+    apply(case_tac a, simp_all)
+    done
+  done
     
 lemma id_aux2:
   "noDenyAll p \<Longrightarrow>
@@ -1216,7 +1296,7 @@ lemma id_aux4[rule_format]:
   "noDenyAll p \<Longrightarrow> \<forall>s. s \<in> set p \<longrightarrow> disjSD_2 a s \<Longrightarrow> 
    s \<in> set (insertDenies p) \<Longrightarrow> \<not> member DenyAll a \<Longrightarrow> 
    disjSD_2 a s"
-  apply (subgoal_tac "   \<exists>a. s =
+  apply (subgoal_tac "\<exists>a. s =
           DenyAllFromTo (first_srcNet a) (first_destNet a) \<oplus>
           DenyAllFromTo (first_destNet a) (first_srcNet a) \<oplus> a \<and>
           a \<in> set p")
@@ -1228,10 +1308,12 @@ lemma sepNetsID[rule_format]:
   apply (induct p, simp)
   apply (rename_tac a p, auto)
   using noDA1C apply blast
-  apply (case_tac "a = DenyAll", auto)
-   apply (simp add: disjSD_2_def)
-  apply (case_tac a,auto)
-    apply (rule disjSD_2IDa, simp_all, rule id_aux4, simp_all, metis noDA noDAID)+
+  subgoal for a p
+    apply (case_tac "a = DenyAll", auto)
+     apply (simp add: disjSD_2_def)
+    apply (case_tac a,auto)
+      apply (rule disjSD_2IDa, simp_all, rule id_aux4, simp_all, metis noDA noDAID)+
+    done
   done
     
 lemma aNDDA[rule_format]: "allNetsDistinct p \<longrightarrow> allNetsDistinct(DenyAll#p)"
@@ -1444,8 +1526,10 @@ lemma isInAlternativeListb:
 lemma ANDSepaux: "allNetsDistinct (x # y # z) \<Longrightarrow> allNetsDistinct (x \<oplus> y # z)"
   apply (simp add: allNetsDistinct_def)
   apply (intro allI impI, rename_tac a b)
-  apply (drule_tac x = a in spec, drule_tac x = b in spec)
-  by (meson isInAlternativeList)
+  subgoal for a b
+    apply (drule_tac x = a in spec, drule_tac x = b in spec)
+    by (meson isInAlternativeList)
+  done
     
 lemma netlistalternativeSeparateaux:
   "net_list_aux [y] @ net_list_aux z = net_list_aux (y # z)"
@@ -1474,24 +1558,28 @@ lemma wp1_alternativesep[rule_format]:
     
 lemma noDAsort[rule_format]: "noDenyAll1 p \<longrightarrow> noDenyAll1 (sort p l)"
   apply (case_tac "p",simp_all)
-  apply (case_tac "a = DenyAll", auto) 
-  using NormalisationGenericProofs.set_sort nDAeqSet apply blast
-proof -
-  fix a::"('a,'b)Combinators" fix list 
-  have * : "a \<noteq> DenyAll \<Longrightarrow> noDenyAll1 (a # list) \<Longrightarrow> noDenyAll (a#list)" by (case_tac a, simp_all)
-  show "a \<noteq> DenyAll \<Longrightarrow> noDenyAll1 (a # list) \<Longrightarrow> noDenyAll1 (insort a (sort list l) l)"
-    apply(cases "insort a (sort list l) l", simp_all)
-    by (metis "*" NormalisationGenericProofs.set_insort NormalisationGenericProofs.set_sort 
-        list.simps(15) nDAeqSet noDA1eq)
-qed
+  subgoal for a as
+    apply (case_tac "a = DenyAll", auto) 
+    using NormalisationGenericProofs.set_sort nDAeqSet apply blast
+  proof -
+    fix a::"('a,'b)Combinators" fix list 
+    have * : "a \<noteq> DenyAll \<Longrightarrow> noDenyAll1 (a # list) \<Longrightarrow> noDenyAll (a#list)" by (case_tac a, simp_all)
+    show "a \<noteq> DenyAll \<Longrightarrow> noDenyAll1 (a # list) \<Longrightarrow> noDenyAll1 (insort a (sort list l) l)"
+      apply(cases "insort a (sort list l) l", simp_all)
+      by (metis "*" NormalisationGenericProofs.set_insort NormalisationGenericProofs.set_sort 
+          list.simps(15) nDAeqSet noDA1eq)
+  qed
+  done
   
 lemma OTNSC[rule_format]: "singleCombinators p \<longrightarrow> OnlyTwoNets p"
   apply (induct p,simp_all)
   apply (rename_tac a p)
   apply (rule impI,drule mp)
    apply (erule singleCombinatorsConc)
-  apply (case_tac a, simp_all)
-   apply (simp add: onlyTwoNets_def)+
+  subgoal for a b
+    apply (case_tac a, simp_all)
+     apply (simp add: onlyTwoNets_def)+
+    done
   done
     
 lemma fMTaux: "\<not> member DenyAll x \<Longrightarrow> first_bothNet x \<noteq> {}"
@@ -1711,10 +1799,12 @@ next
       apply (rule_tac y = "position (first_bothNet aa) l" in basic_trans_rules(22))
        apply (simp_all split: if_splits)
          apply (case_tac aa, simp_all)
-          apply (case_tac "a = x21 \<and> b = x22", simp_all)
-          apply (case_tac "a = x21", simp_all)
-           apply (simp add: order.not_eq_order_implies_strict posaux6)
-          apply (simp add: order.not_eq_order_implies_strict posaux6)
+    subgoal for x x'
+      apply (case_tac "a = x \<and> b = x'", simp_all)
+      apply (case_tac "a = x", simp_all)
+       apply (simp add: order.not_eq_order_implies_strict posaux6)
+      apply (simp add: order.not_eq_order_implies_strict posaux6)
+      done
          apply (simp add: order.not_eq_order_implies_strict posaux6)  
         apply (rule basic_trans_rules(18))
          apply (rule_tac a = "DenyAllFromTo a b" and b = aa in posaux4, simp_all)
@@ -2143,7 +2233,7 @@ lemma NCisSD2[rule_format]:
 lemma separatedNC[rule_format]: 
   "OnlyTwoNets p \<longrightarrow> NetsCollected2 p \<longrightarrow> NetsCollected p \<longrightarrow> noDenyAll1 p \<longrightarrow>  
    allNetsDistinct p  \<longrightarrow> separated p"
-proof (induct p, simp_all, case_tac "a = DenyAll", simp_all, goal_cases)
+proof (induct p, simp_all, rename_tac a b, case_tac "a = DenyAll", simp_all, goal_cases)
   fix a fix p::"('a set set, 'b) Combinators list"
   show  "OnlyTwoNets p \<longrightarrow> NetsCollected2 p \<longrightarrow> NetsCollected p \<longrightarrow> noDenyAll1 p \<longrightarrow> 
           allNetsDistinct p \<longrightarrow> separated p \<Longrightarrow> a \<noteq> DenyAll \<Longrightarrow>  OnlyTwoNets (a # p) \<longrightarrow>

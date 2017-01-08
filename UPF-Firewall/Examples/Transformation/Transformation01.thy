@@ -143,7 +143,7 @@ lemma aux: "\<lbrakk>a \<in> c; a \<notin> d; c = d\<rbrakk> \<Longrightarrow> F
   by auto 
     
 lemma sets_distinct5: "(s::int) < g \<Longrightarrow> {(a::int, b::int). a = s} \<noteq> {(a::int, b::int).  g < a}"
-  apply (auto simp: sets_distinct3)
+  apply (auto simp: sets_distinct3)[1]
   apply (subgoal_tac "(s,4) \<in> {(a::int,b::int). a = (s)}")
    apply (subgoal_tac "(s,4) \<notin> {(a::int,b::int). g < a}")
     apply (erule aux)

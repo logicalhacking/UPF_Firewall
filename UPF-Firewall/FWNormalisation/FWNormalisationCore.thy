@@ -351,7 +351,7 @@ fun qsort where
 
 lemma qsort_permutes:
   "set (qsort xs l) = set xs"
-  apply (induct xs l rule: qsort.induct)
+  apply (induct "xs" "l" rule: qsort.induct)
   by (auto)
 
 lemma set_qsort [simp]: "set (qsort xs l)  = set xs" 
@@ -451,7 +451,7 @@ fun rotatePolicy where
 | "rotatePolicy (a\<oplus>b) = (rotatePolicy b) \<oplus> (rotatePolicy a)"
 
 lemma check: "rev (policy2list (rotatePolicy p)) = policy2list p"
-  apply (induct p)
+  apply (induct "p")
   by (simp_all) 
 
 

@@ -1,8 +1,8 @@
 (*****************************************************************************
  * Copyright (c) 2005-2010 ETH Zurich, Switzerland
  *               2008-2015 Achim D. Brucker, Germany
- *               2009-2016 Université Paris-Sud, France
- *               2015-2016 The University of Sheffield, UK
+ *               2009-2017 Université Paris-Sud, France
+ *               2015-2017 The University of Sheffield, UK
  *
  * All rights reserved.
  *
@@ -55,8 +55,12 @@ lemma aux26[simp]:
 
 lemma wp2_aux[rule_format]: 
   "wellformed_policy2Pr (xs @ [x]) \<longrightarrow> wellformed_policy2Pr xs"
-  by (induct xs, simp_all) (case_tac "a", simp_all)
-
+  apply(induct xs, simp_all) 
+  subgoal for a as
+    apply(case_tac "a", simp_all)
+    done
+  done
+    
 lemma Cdom2: "x \<in> dom(Cp b) \<Longrightarrow> Cp (a \<oplus> b) x = (Cp b) x"
   by (auto simp: Cp.simps)
 
@@ -123,7 +127,7 @@ lemma bar3:
     
 lemma CeqEnd[rule_format,simp]: 
   "a \<noteq> [] \<longrightarrow> x \<in> dom (Cp(list2FWpolicy a)) \<longrightarrow> Cp(list2FWpolicy(b@a)) x = (Cp(list2FWpolicy a)) x"
-proof (induct rule: rev_induct)print_cases
+proof (induct rule: rev_induct)
   case Nil show ?case by simp
 next
   case (snoc xa xs) show ?case  
@@ -154,7 +158,7 @@ lemma C_eq_if_mr_eq2:
     
 lemma nMRtoNone[rule_format]: 
   "p \<noteq> [] \<longrightarrow> applied_rule_rev Cp x p = None \<longrightarrow> Cp (list2FWpolicy p) x = None"
-proof (induct rule: rev_induct) print_cases
+proof (induct rule: rev_induct) 
   case Nil show ?case by simp
 next
   case (snoc xa xs) show ?case
@@ -228,7 +232,11 @@ lemma mrConcEnd[rule_format]:
     
     
 lemma wp3tl[rule_format]: "wellformed_policy3Pr p \<longrightarrow> wellformed_policy3Pr (tl p)"
-  by (induct p, simp_all, case_tac a, simp_all)
+  apply (induct p, simp_all) 
+  subgoal for a as
+    apply(case_tac a, simp_all)
+    done
+  done
     
 lemma wp3Conc[rule_format]: "wellformed_policy3Pr (a#p) \<longrightarrow> wellformed_policy3Pr p"
   by (induct p, simp_all, case_tac a, simp_all)
@@ -259,7 +267,11 @@ lemma mr_not_Conc: "singleCombinators p \<Longrightarrow> applied_rule_rev Cp x 
     
     
 lemma foo25[rule_format]: "wellformed_policy3Pr (p@[x]) \<longrightarrow> wellformed_policy3Pr p"
-  by (induct p, simp_all, case_tac a, simp_all)
+  apply(induct p, simp_all)
+  subgoal for a p
+    apply(case_tac a, simp_all)
+    done
+  done
     
 lemma mr_in_dom[rule_format]: "applied_rule_rev Cp x p = Some a \<longrightarrow> x \<in> dom (Cp a)"
   by (rule_tac xs = p in rev_induct) (auto simp: applied_rule_rev_def)
@@ -268,7 +280,7 @@ lemma mr_in_dom[rule_format]: "applied_rule_rev Cp x p = Some a \<longrightarrow
 lemma wp3EndMT[rule_format]: 
   "wellformed_policy3Pr (p@[xs]) \<longrightarrow>  AllowPortFromTo a b po \<in> set p \<longrightarrow>
    dom (Cp (AllowPortFromTo a b po)) \<inter> dom (Cp xs) = {}"
-  apply (induct p,simp_all)
+  apply (induct p, simp_all)
   by (metis NormalisationIPPProofs.wp3Conc aux0_4 inf_commute list.set_intros(1) 
       wellformed_policy3Pr.simps(2))
     
@@ -324,7 +336,6 @@ lemma DomInterAllowsMT_Ports:
   apply (simp add: twoNetsDistinct_def netsDistinct_def PLemmas)
   by (auto simp: prod_eqI)
     
-    
 lemma wellformed_policy3_charn[rule_format]: 
   "singleCombinators p \<longrightarrow> distinct p \<longrightarrow> allNetsDistinct p \<longrightarrow> 
    wellformed_policy1 p \<longrightarrow> wellformed_policy2Pr p  \<longrightarrow> wellformed_policy3Pr p"
@@ -334,10 +345,12 @@ next
   case (Cons a p) then show ?case  
     apply (auto intro: singleCombinatorsConc ANDConc waux2 wp2Conc)
     apply (case_tac a,simp_all, clarify)
-    apply (case_tac r,simp_all)
-      apply (metis Int_commute) 
-     apply (metis DomInterAllowsMT aux7aa DomInterAllowsMT_Ports)
-    apply (metis aux0_0 )
+    subgoal for a b c d r 
+      apply (case_tac r,simp_all)
+        apply (metis Int_commute) 
+       apply (metis DomInterAllowsMT aux7aa DomInterAllowsMT_Ports)
+      apply (metis aux0_0 )
+      done
     done
 qed
   
@@ -417,13 +430,15 @@ next
       using Cons  apply simp
       apply (intro impI conjI allI, rename_tac "aa" "b")
        apply (rule aux26)
-       apply (rule_tac x = "AllowPortFromTo c d e" and y = "DenyAllFromTo aa b" in tND, 
-          assumption,simp_all)
-       apply (subgoal_tac "smaller (AllowPortFromTo c d e) (DenyAllFromTo aa b) l") 	
-        apply (simp split: if_splits)
-        apply metis
-       apply (erule sorted_is_smaller, simp_all)
-       apply (metis bothNet.simps(2) in_list.simps(2) in_set_in_list)
+      subgoal for aa b
+        apply (rule_tac x = "AllowPortFromTo c d e" and y = "DenyAllFromTo aa b" in tND, 
+            assumption,simp_all)
+        apply (subgoal_tac "smaller (AllowPortFromTo c d e) (DenyAllFromTo aa b) l") 	
+         apply (simp split: if_splits)
+         apply metis
+        apply (erule sorted_is_smaller, simp_all)
+        apply (metis bothNet.simps(2) in_list.simps(2) in_set_in_list)
+        done
       by (auto intro: aux7 tNDComm ANDConc singleCombinatorsConc sortedConcEnd)
   next
     case (Conc a b) thus ?thesis using Cons by simp 
@@ -464,7 +479,9 @@ next
       apply (rule_tac t = "removeShadowRules1_alternative (xs @ [x])" and
           s = "(removeShadowRules1_alternative xs)@[x]" in subst)
        apply (erule RS1n_assoc)
-      apply (case_tac "xa \<in> dom (Cp x)", simp_all)
+      subgoal for a
+        apply (case_tac "a \<in> dom (Cp x)", simp_all)
+        done
       done
   qed
 qed
@@ -881,7 +898,11 @@ lemma AILRS3[rule_format,simp]:
     
 lemma SCRS3[rule_format,simp]: 
   "singleCombinators p \<longrightarrow> singleCombinators(rm_MT_rules Cp p)"
-  by (induct p, simp_all) (case_tac "a", simp_all)
+  apply (induct p, simp_all)
+  subgoal for a p
+    apply(case_tac "a", simp_all)
+    done
+  done
     
 lemma RS3subset: "set (rm_MT_rules Cp p)  \<subseteq> set p "
   by (induct p, auto)
@@ -992,11 +1013,13 @@ lemma list2FWpolicy2list[rule_format]:
   "Cp (list2FWpolicy(policy2list p)) = (Cp p)"
   apply (rule ext)
   apply (induct_tac p, simp_all)
-  apply (case_tac "x \<in> dom (Cp (x2))") 
-   apply (metis Cdom2 CeqEnd domIff p2lNmt)
-  apply (metis CeqStart domIff p2lNmt nlpaux)
+  subgoal for x x1 x2
+    apply (case_tac "x \<in> dom (Cp (x2))") 
+     apply (metis Cdom2 CeqEnd domIff p2lNmt)
+    apply (metis CeqStart domIff p2lNmt nlpaux)
+    done
   done
-
+    
 lemmas C_eq_Lemmas = none_MT_rulesRS2 none_MT_rulesrd  SCp2l wp1n_RS2  wp1ID NMPiD waux2
                      wp1alternative_RS1 p2lNmt list2FWpolicy2list wellformed_policy3_charn  wp1_eq
 
@@ -1044,8 +1067,12 @@ lemma C_eq_All_untilSorted_withSimpsQ:
 
 lemma InDomConc[rule_format]: "p \<noteq> [] \<longrightarrow> x \<in> dom (Cp (list2FWpolicy (p))) \<longrightarrow>
                                x \<in>  dom (Cp (list2FWpolicy (a#p)))"
-  by (induct p, simp_all) (case_tac "p = []",simp_all add: dom_def Cp.simps)
-
+  apply (induct p, simp_all)
+  subgoal for a p
+    apply(case_tac "p = []",simp_all add: dom_def Cp.simps)
+    done
+  done
+    
 lemma not_in_member[rule_format]: "member a b \<longrightarrow> x \<notin> dom (Cp b) \<longrightarrow> x \<notin> dom (Cp a)"
   by (induct b)(simp_all add: dom_def Cp.simps)
 
@@ -1055,9 +1082,11 @@ lemma src_in_sdnets[rule_format]:
      apply (simp_all add: fst_set_def subnetsOfAdr_def PLemmas, rename_tac x1 x2)
   apply (intro impI)
   apply (simp add: fst_set_def)
-  apply (case_tac "p \<in> dom (Cp x2)")
-   apply (rule subnetAux)
-    apply (auto simp: PLemmas)
+  subgoal for x1 x2
+    apply (case_tac "p \<in> dom (Cp x2)")
+     apply (rule subnetAux)
+      apply (auto simp: PLemmas)
+    done
   done
     
 lemma dest_in_sdnets[rule_format]: 
@@ -1065,9 +1094,11 @@ lemma dest_in_sdnets[rule_format]:
   apply (induct rule: Combinators.induct)
      apply (simp_all add: snd_set_def subnetsOfAdr_def PLemmas, rename_tac x1 x2)
   apply (intro impI,simp add: snd_set_def)
-  apply (case_tac "p \<in> dom (Cp x2)")
-   apply (rule subnetAux)
-    apply (auto simp: PLemmas)
+  subgoal for x1 x2
+    apply (case_tac "p \<in> dom (Cp x2)")
+     apply (rule subnetAux)
+      apply (auto simp: PLemmas)
+    done
   done
 
 lemma sdnets_in_subnets[rule_format]: 
@@ -1076,8 +1107,10 @@ lemma sdnets_in_subnets[rule_format]:
   apply (rule Combinators.induct)
      apply (simp_all add: PLemmas subnetsOfAdr_def)
   apply (intro impI, simp)
-  apply (case_tac "p \<in> dom (Cp (x2))")
-   apply (auto simp: PLemmas subnetsOfAdr_def)
+  subgoal for x1 x2
+    apply (case_tac "p \<in> dom (Cp (x2))")
+     apply (auto simp: PLemmas subnetsOfAdr_def)
+    done
   done
 
 lemma disjSD_no_p_in_both[rule_format]:   
@@ -1400,13 +1433,15 @@ lemma isSepaux:
   apply (rule_tac A = "(DenyAllFromTo (first_srcNet  a) (first_destNet a) \<oplus>
                       DenyAllFromTo (first_destNet a) (first_srcNet  a) \<oplus> a)" in domsdisj, simp_all)
   apply (rule notI)
-  apply (rule_tac p = xa and x ="(DenyAllFromTo (first_srcNet a) (first_destNet a) \<oplus>
+  subgoal for xa s
+    apply (rule_tac p = xa and x ="(DenyAllFromTo (first_srcNet a) (first_destNet a) \<oplus>
                                DenyAllFromTo (first_destNet a) (first_srcNet  a) \<oplus> a)" 
-      and y = s in disjSD_no_p_in_both, simp_all)
-  using disjSD2aux noDA apply blast
-  using noDA 
-  by blast
-
+        and y = s in disjSD_no_p_in_both, simp_all)
+    using disjSD2aux noDA apply blast
+    using noDA 
+    by blast
+  done
+    
 lemma none_MT_rulessep[rule_format]: "none_MT_rules Cp p \<longrightarrow> none_MT_rules Cp (separate p)"
   by (induct p rule: separate.induct) (simp_all add: Cp.simps map_add_le_mapE map_le_antisym)
     
@@ -1700,20 +1735,22 @@ lemma list2FWpolicys_eq_el[rule_format]:
   "Filter \<noteq> []  \<longrightarrow>  Cp (list2policyR Filter) p =  Cp (list2FWpolicy (rev Filter)) p"
   apply (induct_tac Filter)
    apply simp_all
-  apply (case_tac "list = []")
-   apply simp_all
-  apply (case_tac "p \<in> dom (Cp a)")
-   apply simp_all
-   apply (rule list2policyR_Start)
-   apply simp_all
-  apply (subgoal_tac "Cp (list2policyR (a # list)) p = Cp (list2policyR list) p")
-   apply (subgoal_tac "Cp (list2FWpolicy (rev list @ [a])) p = Cp (list2FWpolicy (rev list)) p")
-    apply simp
-   apply (rule CConcStart2)
-    apply simp
-   apply simp
-  apply (case_tac list,simp_all)
-  apply (simp_all add: Cp.simps dom_def map_add_def)
+  subgoal for a list
+    apply (case_tac "list = []")
+     apply simp_all
+    apply (case_tac "p \<in> dom (Cp a)")
+     apply simp_all
+     apply (rule list2policyR_Start)
+     apply simp_all
+    apply (subgoal_tac "Cp (list2policyR (a # list)) p = Cp (list2policyR list) p")
+     apply (subgoal_tac "Cp (list2FWpolicy (rev list @ [a])) p = Cp (list2FWpolicy (rev list)) p")
+      apply simp
+     apply (rule CConcStart2)
+      apply simp
+     apply simp
+    apply (case_tac list,simp_all)
+    apply (simp_all add: Cp.simps dom_def map_add_def)
+    done
   done
     
 lemma list2FWpolicys_eq: 

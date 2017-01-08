@@ -1,8 +1,8 @@
 (*****************************************************************************
  * Copyright (c) 2005-2010 ETH Zurich, Switzerland
  *               2008-2015 Achim D. Brucker, Germany
- *               2009-2016 Université Paris-Sud, France
- *               2015-2016 The University of Sheffield, UK
+ *               2009-2017 Université Paris-Sud, France
+ *               2015-2017 The University of Sheffield, UK
  *
  * All rights reserved.
  *
@@ -63,7 +63,7 @@ where
 |  "atom p (a # S) = (p a)"
 
 lemma holds_mono : "\<guillemotleft>q\<guillemotright> s \<Longrightarrow> \<guillemotleft>q\<guillemotright> (s @ t)"
-  by(cases s,simp_all)
+  by(cases "s",simp_all)
 
 
 fun always :: "('\<alpha> list \<Rightarrow> bool) \<Rightarrow> '\<alpha> list \<Rightarrow> bool" ("\<box>")
@@ -76,7 +76,7 @@ text{*
   locally, this paves the way to a wealth of library lemmas. 
 *}
 lemma always_is_listall : "(\<box> \<guillemotleft>p\<guillemotright>) (t) = list_all (p) (t)"
-  by(induct t, simp_all)
+  by(induct "t", simp_all)
 
 fun eventually :: "('\<alpha> list \<Rightarrow> bool) \<Rightarrow> '\<alpha> list \<Rightarrow> bool" ("\<diamondsuit>")
 where 
@@ -89,7 +89,7 @@ text{*
   locally, this paves the way to a wealth of library lemmas. 
 *}
 lemma eventually_is_listex : "(\<diamondsuit> \<guillemotleft>p\<guillemotright>) (t) = list_ex (p) (t)"
-  by(induct t, simp_all)
+  by(induct "t", simp_all)
 
 text{*  
   The next two constants will help us later in defining the state transitions. The constant 
@@ -113,11 +113,15 @@ where
   "not_before p q [] = False"
 | "not_before p q (a # S) = (q a \<or> (\<not> (p a) \<and> (not_before p q S)))"
 
-
 lemma not_before_superfluous: 
-"not_before p q = before (Not o p) q"
-by(rule ext,induct_tac "x", simp_all)
-
+  "not_before p q = before (Not o p) q"
+  apply(rule ext) 
+  subgoal for n 
+    apply(induct_tac "n")
+     apply(simp_all)
+    done
+  done
+    
 text{*General "before":*}
 fun until :: "('\<alpha> list \<Rightarrow> bool) \<Rightarrow> ('\<alpha> list \<Rightarrow> bool) \<Rightarrow> '\<alpha> list \<Rightarrow> bool" (infixl "U" 66)
 where 
@@ -139,7 +143,7 @@ proof -
     done
   have C:"\<And>a aa list.(q a \<or> p a \<and> (\<exists>s t. aa # list = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t)) 
                          \<Longrightarrow> (\<exists>s t. a # aa # list = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t)"
-    apply auto
+    apply auto[1]
      apply(rule_tac x="[]" in exI)
      apply(rule_tac x="a # aa # list" in exI, simp)
     apply(rule_tac x="a # s" in exI)
@@ -147,16 +151,21 @@ proof -
     done
   have D:"\<And>a aa list.(\<exists>s t. a # aa # list = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t)
                          \<Longrightarrow> (q a \<or> p a \<and> (\<exists>s t. aa # list = s @ t \<and> \<box> \<guillemotleft>p\<guillemotright> s \<and> \<guillemotleft>q\<guillemotright> t))"
-    apply auto
+    apply auto[1]
      apply(case_tac "s", auto simp:List.neq_Nil_conv)
     apply(case_tac "s", auto simp:List.neq_Nil_conv)
     done
   show ?thesis
-    apply(rule ext,induct_tac "x", simp,
-        case_tac "list",simp_all)
-     apply(rule iffI,erule A, erule B)
-    apply(rule iffI,erule C, erule D)
-    done
-qed
-
+    apply(rule ext)
+    subgoal for n
+      apply(induct_tac "n")
+       apply(simp)
+        subgoal for x xs
+          apply(case_tac "xs")
+           apply(simp,rule iffI,erule A, erule B)
+          apply(simp,rule iffI,erule C, erule D)
+          done
+        done
+      done
+  qed
 end
