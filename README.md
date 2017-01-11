@@ -1,4 +1,4 @@
-# Formal Network Models and Their Application to Firewall Policies (UPF-Firewall)
+# Formal Network Models and Their Application to Firewall Policies (UPF_Firewall)
 This git repository contains a local mirror of
 [A Formal Network Model and Their Application to Firewall Policies](https://www.isa-afp.org/entries/UPF_Firewall.shtml)
 entry of the
@@ -28,7 +28,7 @@ you need to change this import to `$AFP/UPF/UPF`.
 
 ## How to build
 ```
-isabelle build -d UPF-Firewall . UPF-Firewall
+isabelle build -d UPF_Firewall . UPF-Firewall
 ```
 
 ## Authors
