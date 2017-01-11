@@ -1,8 +1,12 @@
 # Formal Network Models and Their Application to Firewall Policies (UPF-Firewall)
-This repository contains the development version of the (future) 
-[Archive of Formal Proofs (AFP)](https://www.isa-afp.org) submission
-[A Formal Network Model and Their Application to Firewall Policies](https://www.isa-afp.org/entries/UPF-Firewall.shtml).
+This git repository contains a local mirror of
+[A Formal Network Model and Their Application to Firewall Policies](https://www.isa-afp.org/entries/UPF_Firewall.shtml)
+entry of the
+[Archive of Formal Proofs (AFP)](https://www.isa-afp.org).
 
+The official AFP releases are tagged. Additionally, this repository
+may contain extensions (i.e., a development version) that may be
+submitted (as an update of the UPF_Firewall entry) at a later stage.
 
 ## Installation
 This project depends on another [AFP](https://www.isa-afp.org) entry: 
@@ -18,7 +22,7 @@ mkdir -p ~/.isabelle/Isabelle2016-1/etc
 echo "/home/isabelle/afp" >> ~/.isabelle/Isabelle2016-1/etc/components
 ```
 
-Now, you can either link the UPF entry to a sibling directory of UPF-Firewall such 
+Now, you can either link the UPF entry to a sibling directory of UPF_Firewall such 
 that the import `../../UPF/UPF` in `PacketFilter/PolicyCore.thy` is valid. Alternatively, 
 you need to change this import to `$AFP/UPF/UPF`.
 
