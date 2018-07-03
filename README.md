@@ -14,7 +14,7 @@ submitted (as an update of the UPF_Firewall entry) at a later stage.
 This project depends on another [AFP](https://www.isa-afp.org) entry: 
 [The Unified Policy Framework (UPF)](https://www.isa-afp.org/entries/UPF.shtml). 
 Please follow the [official guidelines](https://www.isa-afp.org/using.shtml)
-for installing the AFP locall. For short:
+for installing the AFP locally. For short:
 * [Download](https://www.isa-afp.org/release/afp-current.tar.gz) the complete AFP
 * Extract the downloaded archive to an directory of your choice
 * Let's assume the extracted archive lives in `/home/isabelle/afp`, now execute:
