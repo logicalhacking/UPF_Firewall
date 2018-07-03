@@ -44,6 +44,8 @@ isabelle build -d UPF_Firewall . UPF-Firewall
 
 This project is licensed under a 3-clause BSD-style license.
 
+SPDX-License-Identifier: BSD-3-Clause
+
 ## Publications
 * Achim D. Brucker, Lukas Brügger, and Burkhart Wolff. Formal Firewall
   Conformance Testing: An Application of Test and Proof Techniques. In
