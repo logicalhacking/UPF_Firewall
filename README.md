@@ -50,7 +50,7 @@ SPDX-License-Identifier: BSD-3-Clause
 
 The master git repository for this project is hosted by the [Software
 Assurance & Security Research Team](https://logicalhacking.com) at
-https://git.logicalhacking.com/afp-mirror/UPF_Firewall
+<https://git.logicalhacking.com/afp-mirror/UPF_Firewall>.
 
 ## Publications
 * Achim D. Brucker, Lukas Brügger, and Burkhart Wolff. Formal Firewall
