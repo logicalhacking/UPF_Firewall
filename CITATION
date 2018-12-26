@@ -1,9 +1,27 @@
 To cite the use of this formal theory, please use
 
+  Achim D. Brucker, Lukas Brügger, and Burkhart Wolff. Formal Network 
+  Models and Their Application to Firewall Policies. In Archive of Formal 
+  Proofs, 2017. http://www.isa-afp.org/entries/UPF_Firewall.shtml, 
+  Formal proof development.
 
 A BibTeX entry for LaTeX users is
 
-
+@Article{ brucker.ea:upf-firewall:2017,
+	abstract	= 	{We present a formal model of network protocols and their application to modeling firewall policies. The formalization is based on the \emph{Unified Policy Framework} (UPF). The formalization was originally developed with for generating test cases for testing the security configuration actual firewall and router (middle-boxes) using HOL-TestGen. Our work focuses on modeling application level protocols on top of tcp/ip.},
+	author	= 	{Achim D. Brucker and Lukas Br{\"u}gger and Burkhart Wolff},
+	date	= 	{2017-01-08},
+	file	= 	{https://www.brucker.ch/bibliography/download/2017/brucker.ea-upf-firewall-outline-2017.pdf},
+	filelabel	= 	{Outline},
+	issn	= 	{2150-914x},
+	journal	= 	{Archive of Formal Proofs},
+	month	= 	{jan},
+	note	= 	{\url{http://www.isa-afp.org/entries/UPF_Firewall.shtml}, Formal proof development},
+	pdf	= 	{https://www.brucker.ch/bibliography/download/2017/brucker.ea-upf-firewall-2017.pdf},
+	title	= 	{Formal Network Models and Their Application to Firewall Policies},
+	url	= 	{https://www.brucker.ch/bibliography/abstract/brucker.ea-upf-firewall-2017},
+	year	= 	{2017},
+} 
 
 An overview of the formalization is given in:
 
