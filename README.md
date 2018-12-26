@@ -20,13 +20,8 @@ for installing the AFP locally. For short:
 * Let's assume the extracted archive lives in `/home/isabelle/afp`, now execute:
 
 ```
-mkdir -p ~/.isabelle/Isabelle2016-1/etc
-echo "/home/isabelle/afp" >> ~/.isabelle/Isabelle2016-1/etc/components
+echo "/home/isabelle/afp/thys" >> ~/.isabelle/Isabelle2018/ROOTS
 ```
-
-Now, you can either link the UPF entry to a sibling directory of UPF_Firewall such 
-that the import `../../UPF/UPF` in `PacketFilter/PolicyCore.thy` is valid. Alternatively, 
-you need to change this import to `$AFP/UPF/UPF`.
 
 ## How to build
 
