@@ -26,7 +26,7 @@ echo "/home/isabelle/afp/thys" >> ~/.isabelle/Isabelle2018/ROOTS
 ## How to build
 
 ```
-isabelle build -d UPF_Firewall . UPF-Firewall
+isabelle build -d UPF_Firewall UPF-Firewall
 ```
 
 ## Authors
