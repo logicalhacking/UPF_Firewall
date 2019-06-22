@@ -35,12 +35,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************)
 
-chapter {* Examples *}
+chapter \<open>Examples\<close>
 theory  
   Examples
   imports 
     "DMZ/DMZ"
-    "VoIP/VoIP"
+    "Voice_over_IP/Voice_over_IP"
     "Transformation/Transformation"
     "NAT-FW/NAT-FW"
     "PersonalFirewall/PersonalFirewall"

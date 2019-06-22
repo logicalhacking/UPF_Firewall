@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'docker run -v $PWD/UPF_Firewall:/UPF_Firewall logicalhacking:isabelle2018 isabelle build -D /UPF_Firewall'
+                sh 'docker run -v $PWD/UPF_Firewall:/UPF_Firewall logicalhacking:isabelle2019 isabelle build -D /UPF_Firewall'
             }
         }
     }
