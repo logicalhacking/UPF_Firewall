@@ -20,13 +20,13 @@ for installing the AFP locally. For short:
 * Let's assume the extracted archive lives in `/home/isabelle/afp`, now execute:
 
 ```
-echo "/home/isabelle/afp/thys" >> ~/.isabelle/Isabelle2018/ROOTS
+echo "/home/isabelle/afp/thys" >> ~/.isabelle/Isabelle2020/ROOTS
 ```
 
 ## How to build
 
 ```
-isabelle build -d UPF_Firewall UPF-Firewall
+isabelle build -D UPF_Firewall
 ```
 
 ## Authors
