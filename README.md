@@ -20,7 +20,7 @@ for installing the AFP locally. For short:
 * Let's assume the extracted archive lives in `/home/isabelle/afp`, now execute:
 
 ```console
-achim@logicalhacking:~$ echo "/home/isabelle/afp/thys" >> ~/.isabelle/Isabelle2020/ROOTS
+achim@logicalhacking:~$ isabelle components -u "/home/isabelle/afp/thys"
 ```
 
 ## How to build
@@ -41,10 +41,10 @@ This project is licensed under a 3-clause BSD-style license.
 
 SPDX-License-Identifier: BSD-3-Clause
 
-## Master Repository
+## Upstream Repository
 
-The master git repository for this project is hosted by the [Software
-Assurance & Security Research Team](https://logicalhacking.com) at
+The upstream git repository, i.e., the single source of truth, for this project is hosted 
+by the [Software Assurance & Security Research Team](https://logicalhacking.com) at
 <https://git.logicalhacking.com/afp-mirror/UPF_Firewall>.
 
 ## Publications
